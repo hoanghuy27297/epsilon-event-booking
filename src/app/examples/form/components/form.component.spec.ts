@@ -21,7 +21,7 @@ describe('FormComponent', () => {
 
   beforeEach(async () => {
     component = await createComponent<FormComponent>(
-      '<anms-form></anms-form>',
+      '<epsilon-form></epsilon-form>',
       {
         declarations: [FormComponent],
         imports: [TestingModule],
@@ -39,7 +39,7 @@ describe('FormComponent', () => {
 
   it('should submit when form is valid', async () => {
     component.input(
-      component.getByLabelText('anms.examples.form.placeholder1'),
+      component.getByLabelText('epsilon.examples.form.placeholder1'),
       {
         target: {
           value: '@tim_deschryver'
@@ -47,7 +47,7 @@ describe('FormComponent', () => {
       }
     );
     component.input(
-      component.getByLabelText('anms.examples.form.placeholder2'),
+      component.getByLabelText('epsilon.examples.form.placeholder2'),
       {
         target: {
           value: 'mysuperawesomeandsecurepassword'
@@ -55,7 +55,7 @@ describe('FormComponent', () => {
       }
     );
     component.input(
-      component.getByLabelText('anms.examples.form.placeholder3'),
+      component.getByLabelText('epsilon.examples.form.placeholder3'),
       {
         target: {
           value: 'foo@bar.baz'
@@ -63,7 +63,7 @@ describe('FormComponent', () => {
       }
     );
     component.input(
-      component.getByLabelText('anms.examples.form.placeholder5'),
+      component.getByLabelText('epsilon.examples.form.placeholder5'),
       {
         target: {
           value: '1991-12-31'
@@ -71,15 +71,15 @@ describe('FormComponent', () => {
       }
     );
     component.input(
-      component.getByLabelText('anms.examples.form.placeholder4'),
+      component.getByLabelText('epsilon.examples.form.placeholder4'),
       {
         target: {
           value: 'no description needed here'
         }
       }
     );
-    component.click(component.getByLabelText('anms.examples.form.text1'));
-    component.click(component.getByText('anms.examples.form.send'));
+    component.click(component.getByLabelText('epsilon.examples.form.text1'));
+    component.click(component.getByText('epsilon.examples.form.send'));
     const { type, payload } = new ActionFormUpdate({
       form: {
         autosave: false,

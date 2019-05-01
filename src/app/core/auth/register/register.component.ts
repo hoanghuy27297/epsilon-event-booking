@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
-  selector: 'anms-register',
+  selector: 'epsilon-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

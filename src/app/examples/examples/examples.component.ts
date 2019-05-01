@@ -11,7 +11,7 @@ import { State as BaseExamplesState } from '../examples.state';
 interface State extends BaseSettingsState, BaseExamplesState {}
 
 @Component({
-  selector: 'anms-examples',
+  selector: 'epsilon-examples',
   templateUrl: './examples.component.html',
   styleUrls: ['./examples.component.scss'],
   animations: [routeAnimations],
@@ -21,13 +21,13 @@ export class ExamplesComponent implements OnInit {
   isAuthenticated$: Observable<boolean>;
 
   examples = [
-    { link: 'todos', label: 'anms.examples.menu.todos' },
-    { link: 'stock-market', label: 'anms.examples.menu.stocks' },
-    { link: 'theming', label: 'anms.examples.menu.theming' },
-    { link: 'crud', label: 'anms.examples.menu.crud' },
-    { link: 'form', label: 'anms.examples.menu.form' },
-    { link: 'notifications', label: 'anms.examples.menu.notifications' },
-    { link: 'authenticated', label: 'anms.examples.menu.auth', auth: true }
+    { link: 'todos', label: 'epsilon.examples.menu.todos' },
+    { link: 'stock-market', label: 'epsilon.examples.menu.stocks' },
+    { link: 'theming', label: 'epsilon.examples.menu.theming' },
+    { link: 'crud', label: 'epsilon.examples.menu.crud' },
+    { link: 'form', label: 'epsilon.examples.menu.form' },
+    { link: 'notifications', label: 'epsilon.examples.menu.notifications' },
+    { link: 'authenticated', label: 'epsilon.examples.menu.auth', auth: true }
   ];
 
   constructor(private store: Store<State>) {}

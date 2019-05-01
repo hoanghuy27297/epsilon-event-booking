@@ -8,12 +8,12 @@ const routes: Routes = [
   {
     path: 'about',
     component: AboutComponent,
-    data: { title: 'anms.menu.about' }
+    data: { title: 'epsilon.menu.about' }
   },
   {
     path: 'features',
     component: FeaturesComponent,
-    data: { title: 'anms.menu.features' }
+    data: { title: 'epsilon.menu.features' }
   }
 ];
 

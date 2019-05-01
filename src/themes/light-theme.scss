@@ -1,9 +1,9 @@
-$anms-light-primary: mat-palette($mat-grey, 200, 500, 300);
-$anms-light-accent: mat-palette($mat-brown, 200);
-$anms-light-warn: mat-palette($mat-deep-orange, 200);
+$epsilon-light-primary: mat-palette($mat-grey, 200, 500, 300);
+$epsilon-light-accent: mat-palette($mat-brown, 200);
+$epsilon-light-warn: mat-palette($mat-deep-orange, 200);
 
-$anms-light-theme: mat-light-theme(
-  $anms-light-primary,
-  $anms-light-accent,
-  $anms-light-warn
+$epsilon-light-theme: mat-light-theme(
+  $epsilon-light-primary,
+  $epsilon-light-accent,
+  $epsilon-light-warn
 );

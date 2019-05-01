@@ -12,7 +12,7 @@ const routes: Routes = [
   {
     path: 'settings',
     component: SettingsContainerComponent,
-    data: { title: 'anms.menu.settings' }
+    data: { title: 'epsilon.menu.settings' }
   },
   {
     path: 'examples',

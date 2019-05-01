@@ -23,7 +23,7 @@ import {
 } from './settings';
 
 @Component({
-  selector: 'anms-root',
+  selector: 'epsilon-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   animations: [routeAnimations]
@@ -36,13 +36,13 @@ export class AppComponent implements OnInit {
   logo = require('../assets/logo.png');
   languages = ['en', 'de', 'sk', 'fr', 'es', 'pt-br', 'zh-cn', 'he'];
   navigation = [
-    { link: 'about', label: 'anms.menu.about' },
-    { link: 'features', label: 'anms.menu.features' },
-    { link: 'examples', label: 'anms.menu.examples' }
+    { link: 'about', label: 'epsilon.menu.about' },
+    { link: 'features', label: 'epsilon.menu.features' },
+    { link: 'examples', label: 'epsilon.menu.examples' }
   ];
   navigationSideMenu = [
     ...this.navigation,
-    { link: 'settings', label: 'anms.menu.settings' }
+    { link: 'settings', label: 'epsilon.menu.settings' }
   ];
 
   isAuthenticated$: Observable<boolean>;

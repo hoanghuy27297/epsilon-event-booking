@@ -25,34 +25,34 @@
 @import 'app/examples/examples/examples.component.scss-theme';
 
 @mixin custom-components-theme($theme) {
-  @include anms-styles-reset-theme($theme);
-  @include anms-app-component-theme($theme);
-  @include anms-about-component-theme($theme);
-  @include anms-big-input-component-theme($theme);
-  @include anms-notifications-component-theme($theme);
-  @include anms-todos-container-component-theme($theme);
-  @include anms-stock-market-container-component-theme($theme);
-  @include anms-parent-component-theme($theme);
-  @include anms-child-component-theme($theme);
-  @include anms-examples-component-theme($theme);
+  @include epsilon-styles-reset-theme($theme);
+  @include epsilon-app-component-theme($theme);
+  @include epsilon-about-component-theme($theme);
+  @include epsilon-big-input-component-theme($theme);
+  @include epsilon-notifications-component-theme($theme);
+  @include epsilon-todos-container-component-theme($theme);
+  @include epsilon-stock-market-container-component-theme($theme);
+  @include epsilon-parent-component-theme($theme);
+  @include epsilon-child-component-theme($theme);
+  @include epsilon-examples-component-theme($theme);
 }
 
 .default-theme {
-  @include angular-material-theme($anms-theme);
-  @include custom-components-theme($anms-theme);
+  @include angular-material-theme($epsilon-theme);
+  @include custom-components-theme($epsilon-theme);
 }
 
 .light-theme {
-  @include angular-material-theme($anms-light-theme);
-  @include custom-components-theme($anms-light-theme);
+  @include angular-material-theme($epsilon-light-theme);
+  @include custom-components-theme($epsilon-light-theme);
 }
 
 .black-theme {
-  @include angular-material-theme($anms-black-theme);
-  @include custom-components-theme($anms-black-theme);
+  @include angular-material-theme($epsilon-black-theme);
+  @include custom-components-theme($epsilon-black-theme);
 }
 
 .nature-theme {
-  @include angular-material-theme($anms-nature-theme);
-  @include custom-components-theme($anms-nature-theme);
+  @include angular-material-theme($epsilon-nature-theme);
+  @include custom-components-theme($epsilon-nature-theme);
 }

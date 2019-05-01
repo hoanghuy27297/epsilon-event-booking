@@ -7,7 +7,7 @@
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
-      "prefix": "anms",
+      "prefix": "epsilon",
       "schematics": {
         "@schematics/angular:component": {
           "changeDetection": "OnPush"
