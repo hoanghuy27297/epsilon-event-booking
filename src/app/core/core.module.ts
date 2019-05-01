@@ -1,3 +1,4 @@
+import { AuthModule } from './auth/auth.module';
 import { NgModule, Optional, SkipSelf, ErrorHandler } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
@@ -30,6 +31,7 @@ import { GoogleAnalyticsEffects } from './google-analytics/google-analytics.effe
     // angular
     CommonModule,
     HttpClientModule,
+    AuthModule,
 
     // ngrx
     StoreModule.forRoot(reducers, { metaReducers }),
@@ -50,7 +52,6 @@ import { GoogleAnalyticsEffects } from './google-analytics/google-analytics.effe
       }
     })
   ],
-  declarations: [],
   providers: [
     NotificationService,
     LocalStorageService,

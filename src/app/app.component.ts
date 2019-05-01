@@ -1,3 +1,4 @@
+import { NavigationService } from './core/navigation/navigation.service';
 import browser from 'browser-detect';
 import { Component, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
@@ -51,7 +52,8 @@ export class AppComponent implements OnInit {
 
   constructor(
     private store: Store<AppState>,
-    private storageService: LocalStorageService
+    private storageService: LocalStorageService,
+    private navigationSvc: NavigationService,
   ) {}
 
   private static isIEorEdgeOrSafari() {
@@ -75,7 +77,12 @@ export class AppComponent implements OnInit {
   }
 
   onLoginClick() {
-    this.store.dispatch(new ActionAuthLogin());
+    // this.store.dispatch(new ActionAuthLogin());
+    this.navigationSvc.toLogin();
+  }
+
+  onRegisterClick() {
+    this.navigationSvc.toRegister();
   }
 
   onLogoutClick() {

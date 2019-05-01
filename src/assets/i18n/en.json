@@ -35,6 +35,7 @@
   "anms.menu.examples": "Examples",
   "anms.menu.features": "Features",
   "anms.menu.login": "Sign in",
+  "anms.menu.register": "Register",
   "anms.menu.logout": "Logout",
   "anms.menu.settings": "Settings",
   "anms.settings.animations.elements": "Navigation page elements slide up",

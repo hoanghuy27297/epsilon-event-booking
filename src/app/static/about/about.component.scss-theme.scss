@@ -10,7 +10,7 @@
     .background {
       color: mat-color($foreground, text);
       background-color: mat-color($background, background);
-
+      height: 100%;
       .gradient {
         &::before {
           background: linear-gradient(
