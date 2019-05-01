@@ -33,12 +33,12 @@
             }}</span>
 
           <span class="d-none d-md-inline">
-            <!-- <div *ngIf="(isAuthenticated$ | async)"> -->
+            <div *ngIf="(isAuthenticated$ | async)">
               <button mat-button class="nav-button" *ngFor="let item of navigation" [routerLink]="[item.link]"
                 routerLinkActive="active">
                 {{item.label | translate}}
               </button>
-            <!-- </div> -->
+            </div>
           </span>
 
           <button mat-button mat-stroked-button color="accent" *ngIf="!(isAuthenticated$ | async)" (click)="onLoginClick()">
