@@ -23,6 +23,7 @@
 @import 'app/examples/theming/parent/parent.component.scss-theme';
 @import 'app/examples/theming/child/child.component.scss-theme';
 @import 'app/examples/examples/examples.component.scss-theme';
+@import 'app/core/auth/auth.scss-theme.scss';
 
 @mixin custom-components-theme($theme) {
   @include epsilon-styles-reset-theme($theme);

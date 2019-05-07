@@ -77,8 +77,8 @@ export class AppComponent implements OnInit {
   }
 
   onLoginClick() {
-    // this.store.dispatch(new ActionAuthLogin());
-    this.navigationSvc.toLogin();
+    this.store.dispatch(new ActionAuthLogin());
+    // this.navigationSvc.toLogin();
   }
 
   onRegisterClick() {

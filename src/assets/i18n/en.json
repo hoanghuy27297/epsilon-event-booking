@@ -62,5 +62,21 @@
   "epsilon.settings.themes.title": "Themes",
   "epsilon.settings.title": "Settings",
   "epsilon.title.long": "Epsilon Event Booking",
-  "epsilon.title.short": "Event Booking"
+  "epsilon.title.short": "Event Booking",
+
+  "epsilon.login.title": "Log in",
+  "epsilon.login.email": "Email",
+  "epsilon.login.password": "Password",
+
+  "epsilon.register.title": "Register",
+  "epsilon.register.longTitle": "Register a new account",
+  "epsilon.register.firstName": "First Name",
+  "epsilon.register.lastName": "Last Name",
+  "epsilon.register.email": "Email",
+  "epsilon.register.password": "Password",
+  "epsilon.register.confirmPassword": "Confirm Password",
+  "epsilon.register.studentId": "Student ID",
+  "epsilon.register.staffId": "Staff ID",
+  "epsilon.register.gender": "Gender",
+  "epsilon.register.position": "Position"
 }

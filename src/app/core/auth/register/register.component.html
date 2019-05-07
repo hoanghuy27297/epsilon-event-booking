@@ -1,3 +1,71 @@
-<p>
-  register works!
-</p>
+<div class="container">
+    <h1 class="title">{{ 'epsilon.register.longTitle' | translate }}</h1>
+    <form [formGroup]="formGroup">
+      <mat-card>
+        <div class="d-flex row justify-content-between">
+          <mat-form-field class="col-md-6" [ngClass]="routeAnimationsElements">
+            <input matInput formControlName="firstName" placeholder="{{ 'epsilon.register.firstName' | translate }}">
+            <mat-error *ngIf="formErrors.email">
+              {{ formErrors.firstName }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="col-md-6" [ngClass]="routeAnimationsElements">
+            <input matInput formControlName="lastName" placeholder="{{ 'epsilon.register.lastName' | translate }}">
+            <mat-error *ngIf="formErrors.email">
+              {{ formErrors.lastName }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <mat-form-field class="col-md-6" [ngClass]="routeAnimationsElements">
+            <input matInput type="email" formControlName="email" placeholder="{{ 'epsilon.register.email' | translate }}">
+            <mat-error *ngIf="formErrors.email">
+              {{ formErrors.email }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="col-md-6">
+              <mat-select placeholder="{{ 'epsilon.register.gender' | translate }}">
+                  <mat-option *ngFor="let gender of genderList" [value]="gender.code">
+                      {{ gender.name }}
+                  </mat-option>
+              </mat-select>
+              <!-- <mat-error *ngIf="required">Gender is required.</mat-error> -->
+          </mat-form-field>
+        </div>
+        <div class="row">
+            <mat-form-field class="col-md-6">
+                <mat-select placeholder="{{ 'epsilon.register.position' | translate }}">
+                    <mat-option *ngFor="let position of positionList" [value]="position.code">
+                        {{ position.name }}
+                    </mat-option>
+                </mat-select>
+                <!-- <mat-error *ngIf="required">Gender is required.</mat-error> -->
+            </mat-form-field>
+            <mat-form-field class="col-md-6" [ngClass]="routeAnimationsElements">
+              <input matInput formControlName="userId" placeholder="{{ 'epsilon.register.studentId' | translate }}">
+              <mat-error *ngIf="formErrors.email">
+                {{ formErrors.email }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+        <div class="d-flex row justify-content-between">
+          <mat-form-field class="col-md-6" [ngClass]="routeAnimationsElements">
+            <input matInput type="password" formControlName="password" placeholder="{{ 'epsilon.register.password' | translate }}">
+            <mat-error *ngIf="formErrors.password">
+              {{ formErrors.password }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="col-md-6" [ngClass]="routeAnimationsElements">
+            <input matInput type="password" formControlName="confirmPassword" placeholder="{{ 'epsilon.register.confirmPassword' | translate }}">
+            <mat-error *ngIf="formErrors.password">
+              {{ formErrors.confirmPassword }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <button class="mt-2" type="button" mat-raised-button color="accent" [ngClass]="routeAnimationsElements"
+          (click)="onRegister()">
+          {{ 'epsilon.register.title' | translate }}
+        </button>
+      </mat-card>
+    </form>
+  </div>

@@ -9,7 +9,8 @@ import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
 import { AuthRoutingModule } from './auth-routing.module';
 import { SharedModule } from './../../shared/shared.module';
-import { HttpLoaderFactory } from '../core.module';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { environment } from '@env/environment';
 
 @NgModule({
   declarations: [LoginComponent, RegisterComponent],
@@ -28,9 +29,17 @@ import { HttpLoaderFactory } from '../core.module';
         deps: [HttpClient]
       },
       isolate: true
-    })
+    }),
   ],
   providers: [AuthGuardService]
 })
 
 export class AuthModule { }
+
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(
+    http,
+    `${environment.i18nPrefix}/assets/i18n/examples/`,
+    '.json'
+  );
+}
