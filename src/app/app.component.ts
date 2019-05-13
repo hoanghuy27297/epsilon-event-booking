@@ -38,7 +38,9 @@ export class AppComponent implements OnInit {
   navigation = [
     { link: 'about', label: 'epsilon.menu.about' },
     { link: 'features', label: 'epsilon.menu.features' },
-    { link: 'examples', label: 'epsilon.menu.examples' }
+    { link: 'examples', label: 'epsilon.menu.examples' },
+    { link: 'events', label: 'epsilon.events' },
+    { link: 'your-events', label: 'epsilon.yourEvents' }
   ];
   navigationSideMenu = [
     ...this.navigation,
