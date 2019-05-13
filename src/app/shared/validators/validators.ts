@@ -42,10 +42,11 @@ export class UserRules {
     public static addressMaxLength = 150;
     public static addressMinLength = 10;
     public static ccvMaxLength = 3;
-    public static numberOnly = '^[0-9]$';
+    public static numberOnly = /[0-9]/;
     public static idMaxLength = 10;
+    public static idMinLength = 6;
   }
-  
+
   export const validationMessages = {
     email: {
       required: 'Email is required',
@@ -165,7 +166,7 @@ export class UserRules {
     userId: {
       required: 'Your id is required',
       pattern: 'Your id must contain number only',
-      maxLength: `Id number cannot be more than 10 characters.`
+      maxLength: 'Id number cannot be more than 10 characters.',
+      minLength: 'Id number cannot be less than 6 characters.'
     }
   };
-  

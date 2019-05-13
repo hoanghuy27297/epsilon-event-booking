@@ -15,4 +15,8 @@ export class NavigationService {
   toRegister = () => {
     this.route.navigateByUrl('/register');
   }
+
+  toAbout = () => {
+    this.route.navigateByUrl('about');
+  }
 }

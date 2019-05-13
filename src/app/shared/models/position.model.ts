@@ -12,12 +12,7 @@ export class Position {
 
 export declare type PositionNames = 'Student' | 'Staff';
 
-export class PositionList extends Position {
-
-  constructor() {
-    super();
-  }
-  
+export class PositionList {
     get listPosition(): Position[] {
         return [
             new Position(0),

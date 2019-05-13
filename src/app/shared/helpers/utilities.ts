@@ -24,7 +24,7 @@ export class Utility {
           if (control.errors) {
             for (const key in control.errors) {
               if (Object.prototype.hasOwnProperty.call(control.errors, key)) {
-                formErrors[field] += `${
+                formErrors[field] += ` ${
                   (messages as { [key: string]: string })[key]
                 }`;
               }

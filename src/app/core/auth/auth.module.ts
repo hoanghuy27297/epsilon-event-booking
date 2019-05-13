@@ -1,3 +1,4 @@
+import { AngularFireAuthModule } from '@angular/fire/auth';
 import { HttpClient } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
@@ -11,6 +12,7 @@ import { AuthRoutingModule } from './auth-routing.module';
 import { SharedModule } from './../../shared/shared.module';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { environment } from '@env/environment';
+import { CoreModule } from '../core.module';
 
 @NgModule({
   declarations: [LoginComponent, RegisterComponent],
