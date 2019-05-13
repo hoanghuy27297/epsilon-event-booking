@@ -1,7 +1,3 @@
-import { NavigationService } from './../../navigation/navigation.service';
-import { ActionAuthLogin } from './../auth.actions';
-import { AppState } from './../../core.state';
-import { NotificationService } from './../../notifications/notification.service';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {
   FormGroup,
@@ -9,20 +5,25 @@ import {
   Validators,
   FormControl
 } from '@angular/forms';
+import { debounceTime } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 import { CustomValidators } from 'ng2-validation';
 
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
 
+import { NotificationService } from './../../notifications/notification.service';
 import { ROUTE_ANIMATIONS_ELEMENTS } from '@app/core/animations/route.animations';
+import { NavigationService } from './../../navigation/navigation.service';
 import { PositionList } from './../../../shared/models/position.model';
 import { UserRules } from './../../../shared/validators/validators';
 import { GenderList } from './../../../shared/models/gender.model';
 import { Utility } from './../../../shared/helpers/utilities';
 import { User } from './../../../shared/models/user.model';
 import { RegisterFields } from '../register.models.';
-import { debounceTime } from 'rxjs/operators';
-import { Store } from '@ngrx/store';
+import { ActionAuthLogin } from './../auth.actions';
+import { AppState } from './../../core.state';
 
 type FormErrors = { [rf in RegisterFields]: any };
 @Component({
@@ -48,6 +49,7 @@ export class RegisterComponent implements OnInit {
   user = new User();
   genderList = new GenderList().listGender;
   positionList = new PositionList().listPosition;
+  studentId = true;
 
   constructor(
     private fb: FormBuilder,
@@ -81,22 +83,25 @@ export class RegisterComponent implements OnInit {
         [Validators.required, Validators.pattern(UserRules.numberOnly)]
       ],
       gender: [this.user.gender, [Validators.required]],
-      postion: [this.user.position, [Validators.required]],
+      position: [this.user.position, [Validators.required]],
       role: [this.user.role, [Validators.required]],
       password: password,
       confirmPassword: confirmPassword
     });
 
     this.formGroup.valueChanges.pipe(debounceTime(500)).subscribe(values => {
-      // this.user = values;
+      console.log(values)
+      if (values.position === 1) {
+        this.studentId = false;
+      } else {
+        this.studentId = true;
+      }
       Utility.onValueChanged(this.formGroup, this.formErrors);
     });
   }
 
   onRegister() {
     this.user = this.user.fromRawValue(this.formGroup.getRawValue());
-    console.log(this.user);
-    console.log(this.user.toJSON());
     this.signUp();
   }
 

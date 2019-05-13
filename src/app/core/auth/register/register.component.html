@@ -34,7 +34,7 @@
         </div>
         <div class="row">
             <mat-form-field class="col-md-6">
-                <mat-select placeholder="{{ 'epsilon.register.position' | translate }}">
+                <mat-select formControlName="position" placeholder="{{ 'epsilon.register.position' | translate }}">
                     <mat-option *ngFor="let position of positionList" [value]="position.code">
                         {{ position.name }}
                     </mat-option>
@@ -42,7 +42,7 @@
                 <mat-error *ngIf="formErrors.position">{{ formErrors.position }}</mat-error>
             </mat-form-field>
             <mat-form-field class="col-md-6" [ngClass]="routeAnimationsElements">
-              <input matInput formControlName="userId" placeholder="{{ 'epsilon.register.studentId' | translate }}">
+              <input matInput formControlName="userId" autocomplete="off" placeholder="{{this.studentId ? 'Student ID' : 'Staff ID' }}">
               <mat-error *ngIf="formErrors.userId">
                 {{ formErrors.userId }}
               </mat-error>
