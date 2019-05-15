@@ -89,6 +89,9 @@ mat-sidenav-container {
         @media (min-width: map-get($grid-breakpoints, md)) {
           padding: 0;
         }
+        @media (min-width: map-get($grid-breakpoints, lg)) {
+          padding: 10px 0;
+        }
         .links {
           a {
             transition: padding 0.5s;

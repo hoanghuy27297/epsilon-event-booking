@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 
-import { IEvent } from './../../shared/models/event.model';
+import { IEvent, Event } from './../../shared/models/event.model';
 import { upcomingEventData } from './upcoming-events.data';
 
 @Component({
@@ -11,7 +11,7 @@ import { upcomingEventData } from './upcoming-events.data';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UpcomingEventsComponent implements OnInit {
-  dataSource: MatTableDataSource<IEvent> = new MatTableDataSource(upcomingEventData);
+  dataSource: MatTableDataSource<Event> = new MatTableDataSource(upcomingEventData);
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   displayedColumns: string[] = ['name', 'place', 'time', 'amount', 'price', 'status']

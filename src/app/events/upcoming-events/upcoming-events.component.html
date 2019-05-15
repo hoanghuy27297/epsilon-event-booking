@@ -39,7 +39,11 @@
     <!-- Amount Column -->
     <ng-container matColumnDef="status">
       <th mat-header-cell class="row-element" *matHeaderCellDef mat-sort-header> Status </th>
-      <td mat-cell class="row-element" *matCellDef="let row" [style.color]="row.color"> {{row.status}} </td>
+      <td mat-cell class="row-element" *matCellDef="let row" [style.color]="row.color">
+       <span class="badge" [ngClass]="row.statusClassName">
+         {{row.statusName}}
+       </span>
+      </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

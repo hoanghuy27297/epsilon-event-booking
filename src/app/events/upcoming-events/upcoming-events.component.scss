@@ -36,3 +36,32 @@ td {
     padding-top: 12px;
   }
 }
+
+.badge {
+  display: flex;
+  align-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0.8em;
+  font-size: 0.8em;
+  font-weight: 600;
+  border-radius: 20px;
+  color: #fff;
+  justify-content: center;
+  &.available {
+      background-color: #60c778;
+  }
+  &.full {
+      background-color: #dc3545;
+  }
+  &.past {
+      background-color: #6c757d;
+  }
+  &.booked {
+      background-color: #4ccbdf;
+  }
+  &.saved {
+      background-color: #d5d829;
+      // color: #6c757d;
+  }
+}
