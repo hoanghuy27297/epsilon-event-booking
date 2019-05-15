@@ -25,8 +25,11 @@ export class AuthEffects {
   @Effect({ dispatch: false })
   login = this.actions$.pipe(
     ofType<ActionAuthLogin>(AuthActionTypes.LOGIN),
-    tap(() =>
-      this.localStorageService.setItem(AUTH_KEY, { isAuthenticated: true })
+    tap(state =>
+      {
+        console.log(state);
+        this.localStorageService.setItem(AUTH_KEY, { isAuthenticated: true, userId: state.payload })
+      }
     )
   );
 
@@ -35,7 +38,7 @@ export class AuthEffects {
     ofType<ActionAuthLogout>(AuthActionTypes.LOGOUT),
     tap(() => {
       this.router.navigate(['']);
-      this.localStorageService.setItem(AUTH_KEY, { isAuthenticated: false });
+      this.localStorageService.setItem(AUTH_KEY, { isAuthenticated: false, userId: '' });
     })
   );
 }

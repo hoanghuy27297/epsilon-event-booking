@@ -68,10 +68,13 @@ export class LoginComponent implements OnInit {
 
     this.afAuth.auth
       .signInAndRetrieveDataWithEmailAndPassword(email, password)
-      .then(result => {
-        this.notificationSvc.success('Welcome back!');
-        this.store.dispatch(new ActionAuthLogin());
-        this.navigationSvc.toAbout();
+      .then(async result => {
+        if (result.user.uid) {
+          this.notificationSvc.success('Welcome back!');
+          console.log(result.user.uid);
+          await this.store.dispatch(new ActionAuthLogin(result.user.uid));
+          this.navigationSvc.toAbout();
+        }
       })
       .catch(error => this.handleError(error))
   }

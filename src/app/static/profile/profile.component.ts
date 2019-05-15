@@ -1,18 +1,20 @@
-import { Utility } from './../../shared/helpers/utilities';
-import { ROUTE_ANIMATIONS_ELEMENTS } from './../../core/animations/route.animations';
-import { PositionList } from './../../shared/models/position.model';
-import { GenderList } from './../../shared/models/gender.model';
-import { User } from './../../shared/models/user.model';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { NavigationService } from './../../core/navigation/navigation.service';
-import { AppState } from './../../core/core.state';
-import { Store } from '@ngrx/store';
-import { AngularFireAuth } from '@angular/fire/auth';
-import { NotificationService } from '@app/core';
-import { UserRules } from './../../shared/validators/validators';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFireAuth } from '@angular/fire/auth';
 import { debounceTime } from 'rxjs/operators';
+import { Store, select } from '@ngrx/store';
+import { Observable } from 'rxjs';
+
+import { ROUTE_ANIMATIONS_ELEMENTS } from './../../core/animations/route.animations';
+import { NavigationService } from './../../core/navigation/navigation.service';
+import { PositionList } from './../../shared/models/position.model';
+import { UserRules } from './../../shared/validators/validators';
+import { GenderList } from './../../shared/models/gender.model';
+import { NotificationService, selectUserId } from '@app/core';
+import { Utility } from './../../shared/helpers/utilities';
+import { User } from './../../shared/models/user.model';
+import { AppState } from './../../core/core.state';
 
 type UpdateFields =
   | 'firstName'
@@ -46,6 +48,7 @@ export class ProfileComponent implements OnInit {
   genderList = new GenderList().listGender;
   positionList = new PositionList().listPosition;
   studentId = true;
+  userId = '';
 
   constructor(
     private fb: FormBuilder,
@@ -58,6 +61,8 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit() {
     this.buildForm();
+
+    this.store.pipe(select(selectUserId)).subscribe(state => this.userId = state);
   }
 
   buildForm() {
