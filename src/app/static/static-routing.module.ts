@@ -1,3 +1,4 @@
+import { ProfileComponent } from './profile/profile.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
@@ -14,6 +15,11 @@ const routes: Routes = [
     path: 'features',
     component: FeaturesComponent,
     data: { title: 'epsilon.menu.features' }
+  },
+  {
+    path: 'profile',
+    component: ProfileComponent,
+    data: { title: 'epsition.menu.yourProfile' }
   }
 ];
 

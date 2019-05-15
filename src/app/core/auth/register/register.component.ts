@@ -24,6 +24,7 @@ import { User } from './../../../shared/models/user.model';
 import { RegisterFields } from '../register.models.';
 import { ActionAuthLogin } from './../auth.actions';
 import { AppState } from './../../core.state';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 type FormErrors = { [rf in RegisterFields]: any };
 @Component({
@@ -56,7 +57,8 @@ export class RegisterComponent implements OnInit {
     private notificationSvc: NotificationService,
     private afAuth: AngularFireAuth,
     private store: Store<AppState>,
-    private navigationSvc: NavigationService
+    private navigationSvc: NavigationService,
+    protected db: AngularFirestore
   ) {}
 
   ngOnInit() {
@@ -101,7 +103,6 @@ export class RegisterComponent implements OnInit {
 
   onRegister() {
     this.user = this.user.fromRawValue(this.formGroup.getRawValue());
-    console.log(this.user.toJSON())
     this.signUp();
   }
 
@@ -114,9 +115,25 @@ export class RegisterComponent implements OnInit {
           this.notificationSvc.success('Your account is created successfully');
           this.store.dispatch(new ActionAuthLogin());
           this.navigationSvc.toAbout();
+          this.createNewUser(this.user);
         }
       })
       .catch(error => this.handleError(error));
+  }
+
+  createNewUser(data: User): Promise<User> {
+    if (data.email) {
+      return this.db
+        .collection('users')
+        .add(data.toJSON())
+        .then(result => {
+          return data;
+        })
+        .catch(error => {
+          console.log(error);
+          return error;
+        })
+    }
   }
 
   handleError(error: any) {

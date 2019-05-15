@@ -22,8 +22,6 @@ export class User extends DateTracking implements IUser {
 
   constructor(private _id: string = null) {
     super();
-    console.log(super.toJSON());
-    console.log(this)
   }
 
   set id(id: string) {

@@ -38,6 +38,7 @@
   "epsilon.menu.register": "Register",
   "epsilon.menu.logout": "Logout",
   "epsilon.menu.settings": "Settings",
+  "epsilon.menu.yourProfile": "Your Profile",
   "epsilon.settings.animations.elements": "Navigation page elements slide up",
   "epsilon.settings.animations.page": "Navigation whole page transition",
   "epsilon.settings.animations.title": "Animations",

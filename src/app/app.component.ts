@@ -94,4 +94,8 @@ export class AppComponent implements OnInit {
   onLanguageSelect({ value: language }) {
     this.store.dispatch(new ActionSettingsChangeLanguage({ language }));
   }
+
+  onGoToUserProfile() {
+    this.navigationSvc.toProfile();
+  }
 }

@@ -19,4 +19,8 @@ export class NavigationService {
   toAbout = () => {
     this.route.navigateByUrl('about');
   }
+
+  toProfile = () => {
+    this.route.navigateByUrl('profile');
+  }
 }
