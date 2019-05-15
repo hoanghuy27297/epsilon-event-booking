@@ -76,6 +76,7 @@ mat-sidenav-container {
       flex: 1 0 auto;
       margin-top: 64px;
       overflow: hidden;
+      background-color: #FFF;
     }
 
     .footer {
@@ -85,7 +86,9 @@ mat-sidenav-container {
 
       .row {
         padding: 10px 0;
-
+        @media (min-width: map-get($grid-breakpoints, md)) {
+          padding: 0;
+        }
         .links {
           a {
             transition: padding 0.5s;

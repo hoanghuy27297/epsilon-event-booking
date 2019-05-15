@@ -90,7 +90,6 @@ export class RegisterComponent implements OnInit {
     });
 
     this.formGroup.valueChanges.pipe(debounceTime(500)).subscribe(values => {
-      console.log(values)
       if (values.position === 1) {
         this.studentId = false;
       } else {
@@ -102,6 +101,7 @@ export class RegisterComponent implements OnInit {
 
   onRegister() {
     this.user = this.user.fromRawValue(this.formGroup.getRawValue());
+    console.log(this.user.toJSON())
     this.signUp();
   }
 

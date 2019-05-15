@@ -1,0 +1,38 @@
+.table {
+  width: 100%;
+  padding: 8px;
+  display: table;
+}
+
+.row-element {
+  width: 19%;
+  padding-top: 12px;
+}
+
+.row-element_name {
+  width: 30%
+}
+
+.row {
+    width: 100%;
+    display: table-row;
+    cursor: pointer;
+    &:hover {
+      background-color: rgba(226, 226, 226, 0.384);
+    }
+}
+
+.search-wrapper {
+  width: 90%;
+  margin: 0 auto;
+  margin-top: 10px;
+  .search {
+      width: 100%;
+  }
+}
+
+td {
+  .mat-cell {
+    padding-top: 12px;
+  }
+}
