@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime, map } from 'rxjs/operators';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
@@ -15,6 +15,8 @@ import { NotificationService, selectUserId } from '@app/core';
 import { Utility } from './../../shared/helpers/utilities';
 import { User } from './../../shared/models/user.model';
 import { AppState } from './../../core/core.state';
+import { MatDialog } from '@angular/material';
+import { ChangePasswordDialogComponent } from './change-password-dialog/change-password-dialog.component';
 
 type UpdateFields =
   | 'firstName'
@@ -44,7 +46,8 @@ export class ProfileComponent implements OnInit {
     position: '',
   };
 
-  user = new User();
+  user: User = new User();
+  user$: Observable<User>;
   genderList = new GenderList().listGender;
   positionList = new PositionList().listPosition;
   studentId = true;
@@ -56,13 +59,14 @@ export class ProfileComponent implements OnInit {
     private afAuth: AngularFireAuth,
     private store: Store<AppState>,
     private navigationSvc: NavigationService,
-    protected db: AngularFirestore
+    protected db: AngularFirestore,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit() {
     this.buildForm();
 
-    this.store.pipe(select(selectUserId)).subscribe(state => this.userId = state);
+    this.store.pipe(select(selectUserId)).subscribe(state => this.getUserDetail(state));
   }
 
   buildForm() {
@@ -70,7 +74,7 @@ export class ProfileComponent implements OnInit {
     this.formGroup = this.fb.group({
       firstName: [this.user.firstName, [Validators.required]],
       lastName: [this.user.lastName, [Validators.required]],
-      email: [this.user.email, [Validators.required, Validators.email]],
+      email: new FormControl({value: this.user.email, disabled: true}, [Validators.required, Validators.email]),
       userId: [
         this.user.userId,
         [Validators.required, Validators.pattern(UserRules.numberOnly)]
@@ -87,6 +91,17 @@ export class ProfileComponent implements OnInit {
         this.studentId = true;
       }
       Utility.onValueChanged(this.formGroup, this.formErrors);
+    });
+  }
+
+  getUserDetail(id: string) {
+    this.user$ = this.db.collection('users').doc(id).valueChanges().pipe(map(snapshot => new User(snapshot)));
+  }
+
+  onOpenChangePasswordDialog(): void {
+    this.dialog.open(ChangePasswordDialogComponent, {
+      width: '350px',
+      data: {}
     });
   }
 

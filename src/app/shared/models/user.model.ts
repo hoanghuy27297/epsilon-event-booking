@@ -20,8 +20,9 @@ export class User extends DateTracking implements IUser {
   position = 0;
   role = 0;
 
-  constructor(private _id: string = null) {
+  constructor(data?: IUser | any, private _id: string = null) {
     super();
+    this.fromJSON(data);
   }
 
   set id(id: string) {
@@ -44,6 +45,21 @@ export class User extends DateTracking implements IUser {
     this.gender = data.gender || 0;
     this.position = data.position || 0;
     this.role = data.role || 0;
+    return this;
+  }
+
+  fromJSON(data: IUser): User {
+    if (!data) return this;
+    const dataSource = this;
+
+    super.fromJSON(data);
+    this.email = data.email || dataSource.email || '';
+    this.firstName = data.firstName || dataSource.firstName || '';
+    this.lastName = data.lastName || dataSource.lastName || '';
+    this.userId = data.userId || dataSource.userId || null;
+    this.gender = data.gender || dataSource.gender || 0;
+    this.position = data.position || dataSource.position || 0;
+    this.role = data.role || dataSource.role || 0;
     return this;
   }
 

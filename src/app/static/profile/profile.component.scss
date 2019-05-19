@@ -1,0 +1,12 @@
+.change-password {
+  margin: -12px 0 15px 0;
+  .change-password_text {
+    font-size: 14px;
+    color: blue;
+    cursor: pointer;
+    &:hover {
+      font-size: 15px;
+      text-decoration: underline;
+    }
+  }
+}

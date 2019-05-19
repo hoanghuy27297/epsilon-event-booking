@@ -39,6 +39,8 @@
   "epsilon.menu.logout": "Logout",
   "epsilon.menu.settings": "Settings",
   "epsilon.menu.yourProfile": "Your Profile",
+  "epsilon.menu.update": "Update",
+  "epsilon.menu.changePassword": "Change your password",
   "epsilon.settings.animations.elements": "Navigation page elements slide up",
   "epsilon.settings.animations.page": "Navigation whole page transition",
   "epsilon.settings.animations.title": "Animations",
@@ -83,4 +85,5 @@
 
   "epsilon.events": "Events",
   "epsilon.yourEvents": "Your Events"
+
 }

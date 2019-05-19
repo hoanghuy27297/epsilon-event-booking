@@ -1,16 +1,16 @@
 <div class="container">
     <h1 class="title">{{ 'epsilon.menu.yourProfile' | translate }}</h1>
-    <form [formGroup]="formGroup">
+    <form [formGroup]="formGroup" *ngIf="user$ | async as user">
       <mat-card>
         <div class="d-flex row justify-content-between">
           <mat-form-field class="col-md-6" [ngClass]="routeAnimationsElements">
-            <input matInput formControlName="firstName" placeholder="{{ 'epsilon.register.firstName' | translate }}">
+            <input matInput formControlName="firstName" placeholder="{{ 'epsilon.register.firstName' | translate }}" [value]="user.firstName">
             <mat-error *ngIf="formErrors.firstName">
               {{ formErrors.firstName }}
             </mat-error>
           </mat-form-field>
           <mat-form-field class="col-md-6" [ngClass]="routeAnimationsElements">
-            <input matInput formControlName="lastName" placeholder="{{ 'epsilon.register.lastName' | translate }}">
+            <input matInput formControlName="lastName" placeholder="{{ 'epsilon.register.lastName' | translate }}" [value]="user.lastName">
             <mat-error *ngIf="formErrors.lastName">
               {{ formErrors.lastName }}
             </mat-error>
@@ -18,12 +18,12 @@
         </div>
         <div class="row">
           <mat-form-field class="col-md-6" [ngClass]="routeAnimationsElements">
-            <input matInput formControlName="email" placeholder="{{ 'epsilon.register.email' | translate }}">
+            <input matInput formControlName="email" placeholder="{{ 'epsilon.register.email' | translate }}" [value]="user.email">
             <mat-error *ngIf="formErrors.email">
               {{ formErrors.email }}
             </mat-error>
           </mat-form-field>
-          <mat-form-field class="col-md-6">
+          <mat-form-field class="col-md-6" [ngClass]="routeAnimationsElements">
               <mat-select formControlName="gender" placeholder="{{ 'epsilon.register.gender' | translate }}">
                   <mat-option *ngFor="let gender of genderList" [value]="gender.code">
                       {{ gender.name }}
@@ -33,39 +33,28 @@
           </mat-form-field>
         </div>
         <div class="row">
-            <mat-form-field class="col-md-6">
-                <mat-select formControlName="position" placeholder="{{ 'epsilon.register.position' | translate }}">
-                    <mat-option *ngFor="let position of positionList" [value]="position.code">
-                        {{ position.name }}
-                    </mat-option>
-                </mat-select>
-                <mat-error *ngIf="formErrors.position">{{ formErrors.position }}</mat-error>
-            </mat-form-field>
-            <mat-form-field class="col-md-6" [ngClass]="routeAnimationsElements">
-              <input matInput formControlName="userId" autocomplete="off" placeholder="{{this.studentId ? 'Student ID' : 'Staff ID' }}">
-              <mat-error *ngIf="formErrors.userId">
-                {{ formErrors.userId }}
-              </mat-error>
-            </mat-form-field>
-          </div>
-        <!-- <div class="d-flex row justify-content-between">
           <mat-form-field class="col-md-6" [ngClass]="routeAnimationsElements">
-            <input matInput type="password" formControlName="password" placeholder="{{ 'epsilon.register.password' | translate }}">
-            <mat-error *ngIf="formErrors.password">
-              {{ formErrors.password }}
-            </mat-error>
+              <mat-select formControlName="position" placeholder="{{ 'epsilon.register.position' | translate }}">
+                  <mat-option *ngFor="let position of positionList" [value]="position.code">
+                      {{ position.name }}
+                  </mat-option>
+              </mat-select>
+              <mat-error *ngIf="formErrors.position">{{ formErrors.position }}</mat-error>
           </mat-form-field>
           <mat-form-field class="col-md-6" [ngClass]="routeAnimationsElements">
-            <input matInput type="password" formControlName="confirmPassword" placeholder="{{ 'epsilon.register.confirmPassword' | translate }}">
-            <mat-error *ngIf="formErrors.confirmPassword">
-              {{ formErrors.confirmPassword }}
+            <input matInput formControlName="userId" autocomplete="off" placeholder="{{user.position === 0 ? 'Student ID' : 'Staff ID' }}" [value]="user.userId">
+            <mat-error *ngIf="formErrors.userId">
+              {{ formErrors.userId }}
             </mat-error>
           </mat-form-field>
-        </div> -->
-        <!-- <button class="mt-2" type="button" mat-raised-button color="accent" [disabled]="!this.formGroup.valid" [ngClass]="routeAnimationsElements"
-          (click)="onRegister()">
-          {{ 'epsilon.register.title' | translate }}
-        </button> -->
+        </div>
+        <div class="change-password">
+          <span class="change-password_text" (click)="onOpenChangePasswordDialog()">{{ 'epsilon.menu.changePassword' | translate }}</span>
+        </div>
+        <button class="mt-2" type="button" mat-raised-button color="accent" [ngClass]="routeAnimationsElements"
+          (click)="onUpdate()">
+          {{ 'epsilon.menu.update' | translate }}
+        </button>
       </mat-card>
     </form>
   </div>

@@ -1,7 +1,9 @@
+import { User } from './../../../shared/models/user.model';
+import { AngularFirestore } from '@angular/fire/firestore';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime, map } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 
 import { AppState } from './../../core.state';
@@ -12,7 +14,7 @@ import { NavigationService } from './../../navigation/navigation.service';
 import { ROUTE_ANIMATIONS_ELEMENTS } from '@app/core/animations/route.animations';
 import { NotificationService } from '@app/core/notifications/notification.service';
 
-type FormErrors = { [lf in LoginFields]: any};
+type FormErrors = { [lf in LoginFields]: any };
 @Component({
   selector: 'epsilon-login',
   templateUrl: './login.component.html',
@@ -25,20 +27,21 @@ export class LoginComponent implements OnInit {
   formErrors: FormErrors = {
     email: '',
     password: ''
-  }
+  };
 
   private loginModel: ILoginModel = {
     email: '',
     password: ''
-  }
+  };
 
   constructor(
     private fb: FormBuilder,
+    private db: AngularFirestore,
     private store: Store<AppState>,
     private afAuth: AngularFireAuth,
     private navigationSvc: NavigationService,
-    private notificationSvc: NotificationService,
-  ) { }
+    private notificationSvc: NotificationService
+  ) {}
 
   ngOnInit() {
     this.buildForm();
@@ -48,18 +51,12 @@ export class LoginComponent implements OnInit {
     this.formGroup = this.fb.group({
       email: ['', [Validators.required]],
       password: ['', [Validators.required]]
-    })
+    });
 
-    this.formGroup.valueChanges
-      .pipe(
-          debounceTime(500),
-      ).subscribe(values => {
-          this.loginModel = values;
-          Utility.onValueChanged(
-              this.formGroup,
-              this.formErrors
-          );
-      });
+    this.formGroup.valueChanges.pipe(debounceTime(500)).subscribe(values => {
+      this.loginModel = values;
+      Utility.onValueChanged(this.formGroup, this.formErrors);
+    });
   }
 
   onLogin() {
@@ -68,15 +65,15 @@ export class LoginComponent implements OnInit {
 
     this.afAuth.auth
       .signInAndRetrieveDataWithEmailAndPassword(email, password)
-      .then(async result => {
+      .then(result => {
         if (result.user.uid) {
           this.notificationSvc.success('Welcome back!');
-          console.log(result.user.uid);
-          await this.store.dispatch(new ActionAuthLogin(result.user.uid));
+          console.log(result);
+          this.getUserDocId(email);
           this.navigationSvc.toAbout();
         }
       })
-      .catch(error => this.handleError(error))
+      .catch(error => this.handleError(error));
   }
 
   handleError(error: any) {
@@ -112,4 +109,16 @@ export class LoginComponent implements OnInit {
     return error;
   }
 
+  getUserDocId(email: string) {
+    this.db
+      .collection('users')
+      .snapshotChanges()
+      .subscribe(data => {
+        data.map(item => {
+          const user = new User(item.payload.doc.data());
+          if (user.email === email)
+            this.store.dispatch(new ActionAuthLogin(item.payload.doc.id));
+        });
+      });
+  }
 }

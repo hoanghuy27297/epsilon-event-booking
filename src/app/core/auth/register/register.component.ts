@@ -113,7 +113,6 @@ export class RegisterComponent implements OnInit {
       .then(result => {
         if (result.additionalUserInfo.isNewUser) {
           this.notificationSvc.success('Your account is created successfully');
-          this.store.dispatch(new ActionAuthLogin(result.user.uid));
           this.navigationSvc.toAbout();
           this.createNewUser(this.user);
         }
@@ -127,6 +126,7 @@ export class RegisterComponent implements OnInit {
         .collection('users')
         .add(data.toJSON())
         .then(result => {
+          this.store.dispatch(new ActionAuthLogin(result.id));
           return data;
         })
         .catch(error => {

@@ -23,7 +23,7 @@
               {{ formErrors.email }}
             </mat-error>
           </mat-form-field>
-          <mat-form-field class="col-md-6">
+          <mat-form-field class="col-md-6" [ngClass]="routeAnimationsElements">
               <mat-select formControlName="gender" placeholder="{{ 'epsilon.register.gender' | translate }}">
                   <mat-option *ngFor="let gender of genderList" [value]="gender.code">
                       {{ gender.name }}
@@ -33,7 +33,7 @@
           </mat-form-field>
         </div>
         <div class="row">
-            <mat-form-field class="col-md-6">
+            <mat-form-field class="col-md-6" [ngClass]="routeAnimationsElements">
                 <mat-select formControlName="position" placeholder="{{ 'epsilon.register.position' | translate }}">
                     <mat-option *ngFor="let position of positionList" [value]="position.code">
                         {{ position.name }}
