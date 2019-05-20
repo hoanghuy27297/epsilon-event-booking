@@ -1,10 +1,13 @@
-<div class="search-wrapper">
-  <mat-form-field class="search">
+<div class="search-wrapper" *ngIf="user$ | async as user">
+  <mat-form-field [style.width]="user.role === 0 ? '100%' : '80%'" [style.margin-right]="user.role === 0 ? '0' : '15px'" [ngClass]="routeAnimationsElements">
     <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search a event">
   </mat-form-field>
+  <button [class]="user.role === 0 && 'add-new_none'" type="button" mat-raised-button color="accent" [ngClass]="routeAnimationsElements" (click)="onOpenAddNewEventDialog()">
+    {{ 'epsilon.events.addNew' | translate }}
+  </button>
 </div>
 
-  <mat-table mat-table [dataSource]="dataSource" class="table" matSort>
+  <mat-table mat-table [dataSource]="dataSource" class="table" matSort [ngClass]="routeAnimationsElements">
 
     <!-- Name Column -->
     <ng-container matColumnDef="name">

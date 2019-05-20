@@ -1,7 +1,7 @@
-import { IDateTracking } from './date-tracking.model';
+import { IDateTracking, DateTracking } from './date-tracking.model';
 import { EventStatusEnum, EventStatus, EventStatusTypes } from './status.model';
 
-export interface IEvent {
+export interface IEvent extends IDateTracking {
   id?: string,
   name: string,
   place: string,
@@ -12,10 +12,11 @@ export interface IEvent {
   amount: number,
   discount: number,
   promotionCode: Array<string>,
-  status: number
+  status: number,
+  description: string,
 }
 
-export class Event implements IEvent {
+export class Event extends DateTracking implements IEvent {
   name = '';
   place = '';
   date = '';
@@ -25,26 +26,31 @@ export class Event implements IEvent {
   amount = 0;
   discount = 0;
   promotionCode = [];
+  description = '';
 
   private _status: EventStatus = new EventStatus();
 
   constructor(data?: IEvent | any) {
+    super();
     this.fromJSON(data);
   }
 
   fromJSON(data: IEvent | any): Event {
     if (!data) return this;
+    const dataSource = this;
 
-    this.name = data.name || '';
-    this.place = data.place || '';
-    this.date = data.date || '';
-    this.time = data.time || '';
-    this.price = data.price || 0;
-    this.capacity = data.capacity || 0;
-    this.amount = data.amount || 0;
-    this.discount = data.discount || 0;
-    this.promotionCode = data.promotionCode || [];
+    super.fromJSON(data);
+    this.name = data.name || dataSource.name || '';
+    this.place = data.place || dataSource.place || '';
+    this.date = data.date || dataSource.date || '';
+    this.time = data.time || dataSource.time || '';
+    this.price = data.price || dataSource.price || 0;
+    this.capacity = data.capacity || dataSource.capacity || 0;
+    this.amount = data.amount || dataSource.amount || 0;
+    this.discount = data.discount || dataSource.discount || 0;
+    this.promotionCode = data.promotionCode || dataSource.promotionCode || [];
     this._status = new EventStatus(data.status) || new EventStatus();
+    this.description = data.description || dataSource.description || '';
 
     return this;
   }
@@ -72,7 +78,9 @@ export class Event implements IEvent {
       amount: this.amount,
       discount: this.discount,
       promotionCode: this.promotionCode,
-      status: this.status
+      status: this.status,
+      description: this.description,
+      ...super.toJSON()
     }
   }
 }

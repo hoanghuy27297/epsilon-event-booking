@@ -8,7 +8,7 @@ export enum AuthActionTypes {
 export class ActionAuthLogin implements Action {
   readonly type = AuthActionTypes.LOGIN;
 
-  constructor(public payload: string) {}
+  constructor(public payload: string, public data: any) {}
 }
 
 export class ActionAuthLogout implements Action {

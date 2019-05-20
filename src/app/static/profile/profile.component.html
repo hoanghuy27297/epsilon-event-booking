@@ -51,8 +51,8 @@
         <div class="change-password">
           <span class="change-password_text" (click)="onOpenChangePasswordDialog()">{{ 'epsilon.menu.changePassword' | translate }}</span>
         </div>
-        <button class="mt-2" type="button" mat-raised-button color="accent" [ngClass]="routeAnimationsElements"
-          (click)="onUpdate()">
+        <button class="mt-2" type="button" mat-raised-button color="accent" [ngClass]="routeAnimationsElements" [disabled]="this.formGroup.pristine"
+          (click)="updateUserDetail()">
           {{ 'epsilon.menu.update' | translate }}
         </button>
       </mat-card>

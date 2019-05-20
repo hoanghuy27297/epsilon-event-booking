@@ -117,7 +117,7 @@ export class LoginComponent implements OnInit {
         data.map(item => {
           const user = new User(item.payload.doc.data());
           if (user.email === email)
-            this.store.dispatch(new ActionAuthLogin(item.payload.doc.id));
+            this.store.dispatch(new ActionAuthLogin(item.payload.doc.id, user.toJSON()));
         });
       });
   }

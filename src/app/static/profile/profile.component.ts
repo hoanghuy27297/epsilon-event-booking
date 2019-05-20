@@ -1,5 +1,10 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { FormControl, Validators, FormBuilder, FormGroup } from '@angular/forms';
+import {
+  FormControl,
+  Validators,
+  FormBuilder,
+  FormGroup
+} from '@angular/forms';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { debounceTime, map } from 'rxjs/operators';
@@ -24,7 +29,7 @@ type UpdateFields =
   | 'email'
   | 'userId'
   | 'gender'
-  | 'position'
+  | 'position';
 
 type FormErrors = { [uf in UpdateFields]: any };
 
@@ -43,7 +48,7 @@ export class ProfileComponent implements OnInit {
     email: '',
     userId: '',
     gender: '',
-    position: '',
+    position: ''
   };
 
   user: User = new User();
@@ -61,27 +66,31 @@ export class ProfileComponent implements OnInit {
     private navigationSvc: NavigationService,
     protected db: AngularFirestore,
     private dialog: MatDialog
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.buildForm();
 
-    this.store.pipe(select(selectUserId)).subscribe(state => this.getUserDetail(state));
+    this.store
+      .pipe(select(selectUserId))
+      .subscribe(state => this.getUserDetail(state));
   }
 
   buildForm() {
-
     this.formGroup = this.fb.group({
       firstName: [this.user.firstName, [Validators.required]],
       lastName: [this.user.lastName, [Validators.required]],
-      email: new FormControl({value: this.user.email, disabled: true}, [Validators.required, Validators.email]),
+      email: new FormControl({ value: this.user.email, disabled: true }, [
+        Validators.required,
+        Validators.email
+      ]),
       userId: [
         this.user.userId,
         [Validators.required, Validators.pattern(UserRules.numberOnly)]
       ],
       gender: [this.user.gender, [Validators.required]],
       position: [this.user.position, [Validators.required]],
-      role: [this.user.role, [Validators.required]],
+      role: [this.user.role, [Validators.required]]
     });
 
     this.formGroup.valueChanges.pipe(debounceTime(500)).subscribe(values => {
@@ -95,14 +104,33 @@ export class ProfileComponent implements OnInit {
   }
 
   getUserDetail(id: string) {
-    this.user$ = this.db.collection('users').doc(id).valueChanges().pipe(map(snapshot => new User(snapshot)));
+    this.userId = id;
+    this.user$ = this.db
+      .collection('users')
+      .doc(id)
+      .valueChanges()
+      .pipe(
+        map(snapshot => {
+          this.user = new User(snapshot);
+          return new User(snapshot);
+        })
+      );
   }
 
   onOpenChangePasswordDialog(): void {
     this.dialog.open(ChangePasswordDialogComponent, {
-      width: '350px',
-      data: {}
+      width: '350px'
     });
   }
 
+  updateUserDetail() {
+    this.user = this.user.fromRawValue(this.formGroup.getRawValue());
+    this.db
+      .doc(`users/${this.userId}`)
+      .set(this.user.toJSON(), { merge: true })
+      .then(() =>
+        this.notificationSvc.success('You have updated your profile successfully!')
+      )
+      .catch(error => console.log(error));
+  }
 }

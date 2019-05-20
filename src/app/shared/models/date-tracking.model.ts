@@ -3,69 +3,64 @@ import * as _moment from 'moment';
 import { DateTime } from './datetime.model';
 
 export interface IDateTracking {
-    createdDate: Date;
-    updatedDate: Date;
+    createdDate?: Date | DateTime;
+    updatedDate?: Date | DateTime;
 }
 
-export class DateTracking extends DateTime implements IDateTracking {
-    private _createdDate: Date;
-    private _updatedDate: Date;
+export class DateTracking implements IDateTracking {
+    private _createdDate: DateTime = new DateTime(new Date());
+    private _updatedDate: DateTime = new DateTime(new Date());
 
-    constructor() {
-        super();
-        this._createdDate = this.currentDate;
-        this._updatedDate = this.currentDate;
+    constructor(data: IDateTracking | any = null) {
+        this.fromJSON(data);
     }
 
     fromJSON(data: IDateTracking | any): DateTracking {
         if (!data) return this;
+        this.__createdDate = data.createdDate || new Date();
+        this.__updatedDate = data.updatedDate || new Date();
 
-        this.dateObject = data.createdDate || null;
-        this._createdDate = this.dateObject;
-
-        this.dateObject = data.updatedDate || null;
-        this._updatedDate = this.dateObject;
         return this;
     }
 
-    getDateFromSeconds(seconds: any): Date {
-        return _moment.unix(seconds).toDate() || null;
+    get createdDate(): Date | any {
+        return this._createdDate.date;
+    }
+
+    get updatedDate(): Date | any {
+        return this._updatedDate.date;
+    }
+
+    set __createdDate(date: Date | any) {
+        this._createdDate = new DateTime(date);
+    }
+
+    set __updatedDate(date: Date | any) {
+        this._updatedDate = new DateTime(date);
     }
 
     get dateCreatedFromNow(): string {
-        return this._createdDate
-            ? _moment(this._createdDate)
+        return this.createdDate
+            ? _moment(this.createdDate)
                 .startOf('seconds')
                 .fromNow()
             : '';
     }
 
     get dateUpdatedFromNow(): string {
-        return this._updatedDate
-            ? _moment(this._updatedDate)
+        return this.updatedDate
+            ? _moment(this.updatedDate)
                 .startOf('seconds')
                 .fromNow()
             : '';
     }
 
-    get currentDate(): Date {
-        return _moment(new Date()).toDate();
+    get dateCreatedFormated(): string {
+        return this._createdDate.getDateWithFormat();
     }
 
-    setUpdatedTime() {
-        this._updatedDate = this.currentDate;
-    }
-
-    setCreatedTime() {
-        this._createdDate = this.currentDate;
-    }
-
-    get createdDate(): Date | any {
-        return this._createdDate || null;
-    }
-
-    get updatedDate(): Date | any {
-        return this._updatedDate || this.currentDate;
+    get dateUpdatedFormated(): string {
+        return this._updatedDate.getDateWithFormat();
     }
 
     toJSON(): IDateTracking {

@@ -38,13 +38,14 @@ export class User extends DateTracking implements IUser {
   }
 
   fromRawValue(data: any): User {
-    this.email = data.email || '';
-    this.firstName = data.firstName || '';
-    this.lastName = data.lastName || '';
-    this.userId = data.userId || null;
-    this.gender = data.gender || 0;
-    this.position = data.position || 0;
-    this.role = data.role || 0;
+    const dataSource = this;
+    this.email = data.email || dataSource.email || '';
+    this.firstName = data.firstName || dataSource.firstName || '';
+    this.lastName = data.lastName || dataSource.lastName || '';
+    this.userId = data.userId || dataSource.userId || null;
+    this.gender = data.gender || dataSource.gender || 0;
+    this.position = data.position || dataSource.position || 0;
+    this.role = data.role || dataSource.role || 0;
     return this;
   }
 

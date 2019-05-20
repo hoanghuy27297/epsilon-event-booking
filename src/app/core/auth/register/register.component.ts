@@ -126,7 +126,7 @@ export class RegisterComponent implements OnInit {
         .collection('users')
         .add(data.toJSON())
         .then(result => {
-          this.store.dispatch(new ActionAuthLogin(result.id));
+          this.store.dispatch(new ActionAuthLogin(result.id, data.toJSON()));
           return data;
         })
         .catch(error => {

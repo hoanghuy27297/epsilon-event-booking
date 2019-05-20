@@ -1,6 +1,7 @@
 export interface AuthState {
   isAuthenticated: boolean;
   userId: string;
+  user: any;
 }
 
 export interface ILoginModel {

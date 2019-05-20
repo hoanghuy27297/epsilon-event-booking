@@ -84,6 +84,19 @@
   "epsilon.register.position": "Position",
 
   "epsilon.events": "Events",
+  "epsilon.events.addNew": "Add New Event",
+  "epsilon.events.createNewEvent": "Create A New Event",
+  "epsilon.events.name": "Event name",
+  "epsilon.events.place": "Place",
+  "epsilon.events.date": "Date",
+  "epsilon.events.time": "Time",
+  "epsilon.events.ticketPrice": "Ticket price",
+  "epsilon.events.price": "Price",
+  "epsilon.events.amountOfPeople": "Amount of people",
+  "epsilon.events.promotionCode": "Promotion code",
+  "epsilon.events.discount": "Discount",
+  "epsilon.events.description": "Event description",
+
   "epsilon.yourEvents": "Your Events"
 
 }
