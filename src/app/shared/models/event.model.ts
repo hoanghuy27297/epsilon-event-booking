@@ -1,12 +1,14 @@
 import { IDateTracking, DateTracking } from './date-tracking.model';
 import { EventStatusEnum, EventStatus, EventStatusTypes } from './status.model';
+import { DateTime } from './datetime.model';
 
 export interface IEvent extends IDateTracking {
   id?: string,
   name: string,
   place: string,
-  date: string,
-  time: string,
+  // date: string,
+  // time: string,
+  eventTime: Date | DateTime,
   price: number,
   capacity: number,
   amount: number,
@@ -19,8 +21,9 @@ export interface IEvent extends IDateTracking {
 export class Event extends DateTracking implements IEvent {
   name = '';
   place = '';
-  date = '';
-  time = '';
+  // date = '';
+  // time = '';
+  private _eventTime: DateTime = new DateTime(new Date());
   price = 0;
   capacity = 0;
   amount = 0;
@@ -35,6 +38,25 @@ export class Event extends DateTracking implements IEvent {
     this.fromJSON(data);
   }
 
+  getRawValue(data: IEvent | any): Event {
+    const dataSource = this;
+
+    this.name = data.name || dataSource.name || '';
+    this.place = data.place || dataSource.place || '';
+    // this.date = data.date || dataSource.date || '';
+    // this.time = data.time || dataSource.time || '';
+    this.eventTime = data.eventTime || dataSource.eventTime || new DateTime(new Date());
+    this.price = data.price || dataSource.price || 0;
+    this.capacity = data.capacity || dataSource.capacity || 0;
+    this.amount = data.amount || dataSource.amount || 0;
+    this.discount = data.discount || dataSource.discount || 0;
+    this.promotionCode = data.promotionCode || dataSource.promotionCode || [];
+    this._status = new EventStatus(data.status) || new EventStatus();
+    this.description = data.description || dataSource.description || '';
+
+    return this;
+  }
+
   fromJSON(data: IEvent | any): Event {
     if (!data) return this;
     const dataSource = this;
@@ -42,8 +64,9 @@ export class Event extends DateTracking implements IEvent {
     super.fromJSON(data);
     this.name = data.name || dataSource.name || '';
     this.place = data.place || dataSource.place || '';
-    this.date = data.date || dataSource.date || '';
-    this.time = data.time || dataSource.time || '';
+    // this.date = data.date || dataSource.date || '';
+    // this.time = data.time || dataSource.time || '';
+    this.eventTime = data.eventTime || dataSource.eventTime || new DateTime(new Date());
     this.price = data.price || dataSource.price || 0;
     this.capacity = data.capacity || dataSource.capacity || 0;
     this.amount = data.amount || dataSource.amount || 0;
@@ -67,12 +90,21 @@ export class Event extends DateTracking implements IEvent {
       return this._status.statusClassName;
   }
 
+  get eventTime(): DateTime {
+    return this._eventTime;
+  }
+
+  set eventTime(eventTime: DateTime) {
+    this._eventTime = eventTime;
+  }
+
   toJSON(): IEvent {
     return {
       name: this.name,
       place: this.place,
-      date: this.date,
-      time: this.time,
+      // date: this.date,
+      // time: this.time,
+      eventTime: this.eventTime,
       price: this.price,
       capacity: this.capacity,
       amount: this.amount,

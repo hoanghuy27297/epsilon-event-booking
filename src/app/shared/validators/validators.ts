@@ -42,9 +42,10 @@ export class UserRules {
     public static addressMaxLength = 150;
     public static addressMinLength = 10;
     public static ccvMaxLength = 3;
-    public static numberOnly = /[0-9]/;
+    public static numberOnly = /[0-9]+/;
     public static idMaxLength = 10;
     public static idMinLength = 6;
+    public static eventTime = /[0-9]{2}\:[0-9]{2}/;
   }
 
   export const validationMessages = {
@@ -168,5 +169,13 @@ export class UserRules {
       pattern: 'Your id must contain number only',
       maxLength: 'Id number cannot be more than 10 characters.',
       minLength: 'Id number cannot be less than 6 characters.'
+    },
+    time: {
+      required: 'Your event\'s time is required',
+      pattern: 'Your event\'s time must be corrected with HH:mm format.'
+    },
+    capacity: {
+      required: 'The capacity of people is required',
+      pattern: 'The capacity of people must be number only.'
     }
   };

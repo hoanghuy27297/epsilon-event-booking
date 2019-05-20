@@ -73,6 +73,10 @@ export class DateTime {
     return _moment(this._date).format(format);
   }
 
+  combineDateWithFormat(date: string, time: string): any {
+    return _moment(`${time} ${date}`, 'HH:mm DD/MM/YYYY').toDate().toString();
+  }
+
   get age(): number {
     const ageNumber: number =
       _moment(new Date()).year() - this.date.getFullYear();
