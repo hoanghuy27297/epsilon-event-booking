@@ -4,7 +4,7 @@ import { Utility } from './../../../shared/helpers/utilities';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Event } from './../../../shared/models/event.model';
 import { ROUTE_ANIMATIONS_ELEMENTS } from './../../../core/animations/route.animations';
-import { NotificationService } from '@app/core';
+import { NotificationService, AppState, selectUserId, selectUser } from '@app/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogRef,
@@ -19,6 +19,9 @@ import {
   EventEmitter
 } from '@angular/core';
 import { debounceTime } from 'rxjs/operators';
+import { Store, select } from '@ngrx/store';
+import { User } from '@app/shared/models/user.model';
+import { UserEvent } from '@app/shared/models/user-event.model';
 
 type EventField =
   | 'name'
@@ -33,6 +36,9 @@ type EventField =
   | 'status';
 
 type FormErrors = { [ef in EventField]: any };
+
+const ADMIN_PERMISSION = 1;
+const USER_PERMISSION = 0;
 
 @Component({
   selector: 'epsilon-add-new-event-dialog',
@@ -57,14 +63,24 @@ export class AddNewEventDialogComponent implements OnInit {
   formGroup: FormGroup;
   event: Event = new Event();
   dateTime: DateTime = new DateTime(new Date());
+  userId: string;
+  user: User = new User();
 
   constructor(
     private fb: FormBuilder,
     private db: AngularFirestore,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private notificationSvc: NotificationService,
-    public dialogRef: MatDialogRef<AddNewEventDialogComponent>
-  ) {}
+    public dialogRef: MatDialogRef<AddNewEventDialogComponent>,
+    private store: Store<AppState>
+  ) {
+    this.store
+      .pipe(select(selectUserId))
+      .subscribe(state => this.userId = state);
+    this.store
+      .pipe(select(selectUser))
+      .subscribe(state => this.user = new User(state));
+  }
 
   ngOnInit() {
     this.buildForm();
@@ -109,19 +125,36 @@ export class AddNewEventDialogComponent implements OnInit {
     const date = this.dateTime.getDateWithFormat();
     this.event = this.event.getRawValue(this.formGroup.getRawValue());
     this.event.eventTime = this.dateTime.combineDateWithFormat(date, time);
+    this.event.date = date;
     this.createNewEvent(this.event);
   }
 
-  createNewEvent(data: Event): Promise<void | Event> {
+  async createNewEvent(data: Event): Promise<void | Event> {
     if (data) {
-      return this.db
-        .collection('events')
-        .add(data.toJSON())
-        .then(result => {
-          console.log(result);
+      try {
+        const result = await this.db
+          .collection('events')
+          .add(data.toJSON());
+        if (result.id) {
           this.dialogRef.close();
-        })
-        .catch(error => console.log(error));
+          this.notificationSvc.success('You have added a new event successfully!');
+
+          // create event object with eventId and admin permission of this user to event
+          const userEvent = new UserEvent(data.toJSON());
+          this.user.events = userEvent;
+          this.user.events.eventId = result.id;
+          this.user.events.permission = ADMIN_PERMISSION;
+
+          // add to the yourEvents collections in the admin document field a new event
+          await this.db
+            .doc(`users/${this.userId}/yourEvents/${result.id}`)
+            .set(this.user.events.toJSON());
+
+        }
+      }
+      catch (error) {
+        return console.log(error);
+      }
     }
   }
 }

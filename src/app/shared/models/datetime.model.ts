@@ -74,6 +74,8 @@ export class DateTime {
   }
 
   combineDateWithFormat(date: string, time: string): any {
+    // const combineTime = new DateTime(_moment(`${time} ${date}`, 'HH:mm DD/MM/YYYY').toDate())
+    // return combineTime.date;
     return _moment(`${time} ${date}`, 'HH:mm DD/MM/YYYY').toDate().toString();
   }
 

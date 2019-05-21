@@ -1,3 +1,4 @@
+import { IEventAdmin, EventAdmin } from './event-admin.model';
 import { IDateTracking, DateTracking } from './date-tracking.model';
 import { EventStatusEnum, EventStatus, EventStatusTypes } from './status.model';
 import { DateTime } from './datetime.model';
@@ -6,8 +7,8 @@ export interface IEvent extends IDateTracking {
   id?: string,
   name: string,
   place: string,
-  // date: string,
-  // time: string,
+  date: string,
+  time: string,
   eventTime: Date | DateTime,
   price: number,
   capacity: number,
@@ -16,14 +17,13 @@ export interface IEvent extends IDateTracking {
   promotionCode: Array<string>,
   status: number,
   description: string,
+  admins: Array<Object>,
 }
 
 export class Event extends DateTracking implements IEvent {
   name = '';
   place = '';
-  // date = '';
-  // time = '';
-  private _eventTime: DateTime = new DateTime(new Date());
+  time = '';
   price = 0;
   capacity = 0;
   amount = 0;
@@ -31,6 +31,9 @@ export class Event extends DateTracking implements IEvent {
   promotionCode = [];
   description = '';
 
+  private _date = '';
+  private _eventTime: DateTime = new DateTime(new Date());
+  private _admins = [];
   private _status: EventStatus = new EventStatus();
 
   constructor(data?: IEvent | any) {
@@ -43,8 +46,8 @@ export class Event extends DateTracking implements IEvent {
 
     this.name = data.name || dataSource.name || '';
     this.place = data.place || dataSource.place || '';
-    // this.date = data.date || dataSource.date || '';
-    // this.time = data.time || dataSource.time || '';
+    this.date = data.date || dataSource.date || '';
+    this.time = data.time || dataSource.time || '';
     this.eventTime = data.eventTime || dataSource.eventTime || new DateTime(new Date());
     this.price = data.price || dataSource.price || 0;
     this.capacity = data.capacity || dataSource.capacity || 0;
@@ -53,6 +56,7 @@ export class Event extends DateTracking implements IEvent {
     this.promotionCode = data.promotionCode || dataSource.promotionCode || [];
     this._status = new EventStatus(data.status) || new EventStatus();
     this.description = data.description || dataSource.description || '';
+    this.admins = data.admins || dataSource.admins || [];
 
     return this;
   }
@@ -64,8 +68,8 @@ export class Event extends DateTracking implements IEvent {
     super.fromJSON(data);
     this.name = data.name || dataSource.name || '';
     this.place = data.place || dataSource.place || '';
-    // this.date = data.date || dataSource.date || '';
-    // this.time = data.time || dataSource.time || '';
+    this.date = data.date || dataSource.date || '';
+    this.time = data.time || dataSource.time || '';
     this.eventTime = data.eventTime || dataSource.eventTime || new DateTime(new Date());
     this.price = data.price || dataSource.price || 0;
     this.capacity = data.capacity || dataSource.capacity || 0;
@@ -74,6 +78,7 @@ export class Event extends DateTracking implements IEvent {
     this.promotionCode = data.promotionCode || dataSource.promotionCode || [];
     this._status = new EventStatus(data.status) || new EventStatus();
     this.description = data.description || dataSource.description || '';
+    this.admins = data.admins || dataSource.admins || [];
 
     return this;
   }
@@ -98,20 +103,37 @@ export class Event extends DateTracking implements IEvent {
     this._eventTime = eventTime;
   }
 
+  get admins(): Array<Object> {
+    return this._admins;
+  }
+
+  set admins(admins: Array<Object>) {
+    this._admins = admins;
+  }
+
+  get date(): string {
+    return this._date;
+  }
+
+  set date(date: string) {
+    this._date = date;
+  }
+
   toJSON(): IEvent {
     return {
       name: this.name,
       place: this.place,
-      // date: this.date,
-      // time: this.time,
+      date: this.date,
+      time: this.time,
       eventTime: this.eventTime,
-      price: this.price,
-      capacity: this.capacity,
-      amount: this.amount,
-      discount: this.discount,
+      price: Number(this.price),
+      capacity: Number(this.capacity),
+      amount: Number(this.amount),
+      discount: Number(this.discount),
       promotionCode: this.promotionCode,
       status: this.status,
       description: this.description,
+      admins: this.admins,
       ...super.toJSON()
     }
   }

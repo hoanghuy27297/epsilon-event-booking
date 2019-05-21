@@ -1,3 +1,5 @@
+import { IEvent } from './event.model';
+import { UserEvent, IUserEvent } from './user-event.model';
 import { IDateTracking, DateTracking } from './date-tracking.model';
 
 export interface IUser extends IDateTracking {
@@ -9,6 +11,7 @@ export interface IUser extends IDateTracking {
   gender: number,
   position: number,
   role: number,
+  events: IUserEvent
 }
 
 export class User extends DateTracking implements IUser {
@@ -19,6 +22,7 @@ export class User extends DateTracking implements IUser {
   gender = 0;
   position = 0;
   role = 0;
+  private _events = new UserEvent();
 
   constructor(data?: IUser | any, private _id: string = null) {
     super();
@@ -37,6 +41,14 @@ export class User extends DateTracking implements IUser {
     return `${this.firstName} ${this.lastName}`;
   }
 
+  get events(): UserEvent {
+    return this._events;
+  }
+
+  set events(events: UserEvent) {
+    this._events = new UserEvent(events);
+  }
+
   fromRawValue(data: any): User {
     const dataSource = this;
     this.email = data.email || dataSource.email || '';
@@ -46,6 +58,7 @@ export class User extends DateTracking implements IUser {
     this.gender = data.gender || dataSource.gender || 0;
     this.position = data.position || dataSource.position || 0;
     this.role = data.role || dataSource.role || 0;
+
     return this;
   }
 
@@ -61,6 +74,7 @@ export class User extends DateTracking implements IUser {
     this.gender = data.gender || dataSource.gender || 0;
     this.position = data.position || dataSource.position || 0;
     this.role = data.role || dataSource.role || 0;
+
     return this;
   }
 
@@ -73,6 +87,7 @@ export class User extends DateTracking implements IUser {
       gender: this.gender,
       position: this.position,
       role: this.role,
+      events: this.events.toJSON(),
       ...super.toJSON()
     }
   }

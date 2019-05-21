@@ -37,7 +37,6 @@ export class AppComponent implements OnInit {
   languages = ['en', 'de', 'sk', 'fr', 'es', 'pt-br', 'zh-cn', 'he'];
   navigation = [
     { link: 'about', label: 'epsilon.menu.about' },
-    { link: 'features', label: 'epsilon.menu.features' },
     { link: 'examples', label: 'epsilon.menu.examples' },
     { link: 'events', label: 'epsilon.events' },
     { link: 'your-events', label: 'epsilon.yourEvents' }

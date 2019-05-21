@@ -177,5 +177,14 @@ export class UserRules {
     capacity: {
       required: 'The capacity of people is required',
       pattern: 'The capacity of people must be number only.'
-    }
+    },
+    name: {
+      required: 'Event\'s name is required'
+    },
+    place: {
+      required: 'Event\'s place is required'
+    },
+    date: {
+      required: 'Event\'s date is required'
+    },
   };
