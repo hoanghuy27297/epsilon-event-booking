@@ -23,6 +23,8 @@ import { upcomingEventData } from './upcoming-events.data';
 import { Observable, Subject } from 'rxjs';
 import { User } from '@app/shared/models/user.model';
 import { DateTime } from '@app/shared/models/datetime.model';
+import { selectEventList } from '../events.selector';
+import { EventList } from '../events.actions';
 
 @Component({
   selector: 'epsilon-upcoming-events',
@@ -46,23 +48,32 @@ export class UpcomingEventsComponent implements OnInit {
     'status'
   ];
   user$: Observable<User>;
+  eventList$: Observable<any>;
 
   private _unsubscribeAll: Subject<any> = new Subject();
   constructor(
     private store: Store<AppState>,
     private dialog: MatDialog,
     private db: AngularFirestore
-  ) {}
+  ) {
+    this.eventList$ = this.store.pipe(select(selectEventList));
+  }
 
   ngOnInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-
     this.user$ = this.store.pipe(
       select(selectUser),
       map(user => user)
     );
+
     this.getAllEvent();
+
+    this.eventList$.pipe(takeUntil(this._unsubscribeAll)).subscribe(result => {
+      if (result && result.events) {
+        this.dataSource = new MatTableDataSource(result.events);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      }
+    });
   }
 
   async getAllEvent() {
@@ -70,17 +81,12 @@ export class UpcomingEventsComponent implements OnInit {
       .collection('events')
       .snapshotChanges()
       .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((data) => {
+      .subscribe(data => {
         let events: Event[] = [];
         data.forEach(result => {
-          console.log(result.payload.doc.data());
           events = [new Event(result.payload.doc.data()), ...events];
-          console.log(events);
-        })
-        console.log(events);
-        console.log(upcomingEventData);
-        this.dataSource = new MatTableDataSource(events);
-        console.log(this.dataSource);
+        });
+        this.store.dispatch(new EventList(events));
       });
   }
 

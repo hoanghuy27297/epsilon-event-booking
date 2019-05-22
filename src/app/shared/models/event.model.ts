@@ -3,6 +3,10 @@ import { IDateTracking, DateTracking } from './date-tracking.model';
 import { EventStatusEnum, EventStatus, EventStatusTypes } from './status.model';
 import { DateTime } from './datetime.model';
 
+export interface EventState {
+  events: Event[]
+}
+
 export interface IEvent extends IDateTracking {
   id?: string,
   name: string,
