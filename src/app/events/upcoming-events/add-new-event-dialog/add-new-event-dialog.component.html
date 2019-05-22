@@ -88,8 +88,23 @@
           </mat-form-field>
         </div>
         <!-- / DESCRIPTION -->
+
   </form>
-  <span class="warning_title">* the field must have before submission</span>
+  <!-- ADD MORE ADMIN -->
+  <!-- <div mat-dialog-content class="row">
+    <span class="add-admin" *ngIf="!isAddingAdmin" (click)="onAddMoreAdmins()">+ Add more admins</span>
+    <form [formGroup]="adminFormGroup" *ngIf="isAddingAdmin">
+      <mat-form-field class="add-admin">
+        <input matInput formControlName="email" placeholder="Admin's email">
+        <mat-error *ngIf="adminFormErrors.email">
+          {{ adminFormErrors.email }}
+        </mat-error>
+      </mat-form-field>
+    </form>
+  </div> -->
+  <!-- / ADD MORE ADMIN -->
+
+  <!-- <span class="warning_title">* the field must have before submission</span> -->
 </div>
 <div class="d-flex justify-content-between action full-width">
   <button type="button" mat-raised-button color="warn" (click)="onCancel()">Cancel</button>

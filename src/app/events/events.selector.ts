@@ -6,3 +6,8 @@ export const selectEventList = createSelector(
   selectEvent,
   (state: EventState) => state.events
 )
+
+export const selectYourEventList = createSelector(
+  selectEvent,
+  (state: EventState) => state
+)

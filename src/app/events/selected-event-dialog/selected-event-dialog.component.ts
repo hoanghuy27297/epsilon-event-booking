@@ -31,4 +31,12 @@ export class SelectedEventDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
+  onBookEvent() {
+
+  }
+
+  onEditEvent() {
+
+  }
+
 }

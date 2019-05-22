@@ -109,7 +109,7 @@ export class UpcomingEventsComponent implements OnInit {
           const isFull = event.capacity - event.amount; // check number of joinalble people left
 
           // check upcoming event or past event
-          if (isTimeAvailable < 0 && event.status !== EventStatusEnum.Past) {
+          if (isTimeAvailable <= 0 && event.status !== EventStatusEnum.Past) {
             event.status = EventStatusEnum.Past;
 
             // Update list past status for list of events

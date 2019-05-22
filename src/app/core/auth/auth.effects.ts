@@ -11,6 +11,7 @@ import {
   ActionAuthLogout,
   AuthActionTypes
 } from './auth.actions';
+import { EVENT_KEY } from '@app/events/events.effects';
 
 export const AUTH_KEY = 'AUTH';
 
@@ -39,6 +40,7 @@ export class AuthEffects {
     tap(() => {
       this.router.navigate(['']);
       this.localStorageService.setItem(AUTH_KEY, { isAuthenticated: false, userId: '', user: {} });
+      // this.localStorageService.setItem(EVENT_KEY, { events: [] });
     })
   );
 }

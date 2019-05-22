@@ -3,7 +3,7 @@ import { LocalStorageService } from '@app/core';
 import { Action } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
-import { EventList, EventActionType } from './events.actions';
+import { EventList, EventActionType, YourEventList } from './events.actions';
 
 export const EVENT_KEY = 'EVENT';
 
@@ -15,10 +15,16 @@ export class EventEffects {
   ) {}
 
   @Effect({ dispatch: false })
-  create = this.action$.pipe(
-    ofType<EventList>(EventActionType.CREATE_EVENT),
+  eventList = this.action$.pipe(
+    ofType<EventList>(EventActionType.EVENT_LIST),
     tap(state => {
-      console.log(state);
+      this.localStorageSvc.setItem(EVENT_KEY, { events: state.payload })
+    })
+  );
+  yourEventList = this.action$.pipe(
+    ofType<YourEventList>(EventActionType.EVENT_LIST),
+    tap(state => {
+      this.localStorageSvc.setItem(EVENT_KEY, { yourEvents: state.payload })
     })
   );
 }

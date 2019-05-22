@@ -35,7 +35,11 @@ type EventField =
   | 'promotionCode'
   | 'status';
 
+type AdminField = 'email';
+
 type FormErrors = { [ef in EventField]: any };
+type AdminFormErrors = { [af in AdminField]: any };
+
 
 const ADMIN_PERMISSION = 1;
 const USER_PERMISSION = 0;
@@ -60,11 +64,16 @@ export class AddNewEventDialogComponent implements OnInit {
     promotionCode: '',
     status: ''
   };
+  adminFormErrors: AdminFormErrors = {
+    email: ''
+  }
   formGroup: FormGroup;
+  adminFormGroup: FormGroup;
   event: Event = new Event();
   dateTime: DateTime = new DateTime(new Date());
   userId: string;
   user: User = new User();
+  isAddingAdmin = false;
 
   constructor(
     private fb: FormBuilder,
@@ -116,6 +125,21 @@ export class AddNewEventDialogComponent implements OnInit {
     });
   }
 
+  adminBuildForm() {
+    this.adminFormGroup = this.fb.group({
+      email: ['', [Validators.required, Validators.email]]
+    });
+
+    this.adminFormGroup.valueChanges.pipe(debounceTime(500)).subscribe(values => {
+      Utility.onValueChanged(this.adminFormGroup, this.adminFormErrors);
+    })
+  }
+
+  onAddMoreAdmins() {
+    this.adminBuildForm();
+    this.isAddingAdmin = true;
+  }
+
   onDateChanged(type: string, event: MatDatepickerInputEvent<Date>) {
     this.dateTime = new DateTime(event.value);
   }
@@ -125,11 +149,16 @@ export class AddNewEventDialogComponent implements OnInit {
   }
 
   onAddEvent() {
+    // config event time
     const time = this.formGroup.get('time').value;
     const date = this.dateTime.getDateWithFormat();
     this.event = this.event.getRawValue(this.formGroup.getRawValue());
     this.event.eventTime = this.dateTime.combineDateWithFormat(date, time);
     this.event.date = date;
+
+    // config admins for event
+
+
     this.createNewEvent(this.event);
   }
 
@@ -144,17 +173,17 @@ export class AddNewEventDialogComponent implements OnInit {
           this.notificationSvc.success('You have added a new event successfully!');
 
           // create event object with eventId and admin permission of this user to event
-          const userEvent = new UserEvent(data.toJSON());
-          this.user.events = userEvent;
-          this.user.events.eventId = result.id;
-          this.user.events.permission = ADMIN_PERMISSION;
+          this.event = new Event(data, result.id)
+          const userEvent = new UserEvent(this.event.toJSON());
+          // this.user.events = userEvent;
+          // this.user.events.permission = ADMIN_PERMISSION;
+          userEvent.permission = ADMIN_PERMISSION;
 
           // add to the yourEvents collections in the admin document field a new event
           this.db
             .doc(`users/${this.userId}/yourEvents/${result.id}`)
-            .set(this.user.events.toJSON());
+            .set(userEvent.toJSON());
 
-          this.event = new Event(data, result.id)
           this.db
             .doc(`events/${result.id}`)
             .set(this.event.toJSON())

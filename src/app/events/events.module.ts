@@ -1,3 +1,4 @@
+import { EffectsModule } from '@ngrx/effects';
 import { FEATURE_EVENT, reducers } from './events.state';
 import { EventsRoutingModule } from './events-routing.module';
 import { NgModule } from '@angular/core';
@@ -8,6 +9,7 @@ import { SharedModule } from '@app/shared';
 import { AddNewEventDialogComponent } from './upcoming-events/add-new-event-dialog/add-new-event-dialog.component';
 import { StoreModule } from '@ngrx/store';
 import { SelectedEventDialogComponent } from './selected-event-dialog/selected-event-dialog.component';
+import { EventEffects } from './events.effects';
 
 @NgModule({
   declarations: [UpcomingEventsComponent, YourEventsComponent, AddNewEventDialogComponent, SelectedEventDialogComponent],
@@ -15,7 +17,8 @@ import { SelectedEventDialogComponent } from './selected-event-dialog/selected-e
     CommonModule,
     SharedModule,
     EventsRoutingModule,
-    StoreModule.forFeature(FEATURE_EVENT, reducers)
+    StoreModule.forFeature(FEATURE_EVENT, reducers),
+    EffectsModule.forFeature([EventEffects])
   ],
   entryComponents: [
     AddNewEventDialogComponent,

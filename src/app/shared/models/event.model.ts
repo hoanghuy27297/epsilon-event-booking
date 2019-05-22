@@ -1,10 +1,12 @@
+import { UserEvent } from '@app/shared/models/user-event.model';
 import { IEventAdmin, EventAdmin } from './event-admin.model';
 import { IDateTracking, DateTracking } from './date-tracking.model';
 import { EventStatusEnum, EventStatus, EventStatusTypes } from './status.model';
 import { DateTime } from './datetime.model';
 
 export interface EventState {
-  events: Event[]
+  events: Event[],
+  yourEvents: UserEvent[],
 }
 
 export interface IEvent extends IDateTracking {

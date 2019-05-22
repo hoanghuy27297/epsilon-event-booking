@@ -2,7 +2,8 @@ import { EventActions, EventActionType } from './events.actions';
 import { EventState } from './../shared/models/event.model';
 
 export const initialState: EventState = {
-  events: []
+  events: [],
+  yourEvents: []
 };
 
 export function eventReducer(
@@ -10,7 +11,9 @@ export function eventReducer(
   action: EventActions
 ): EventState {
   switch (action.type) {
-    case EventActionType.CREATE_EVENT:
+    case EventActionType.EVENT_LIST:
       return { ...state, events: action.payload };
+    case EventActionType.YOUR_EVENT_LIST:
+      return { ...state, yourEvents: action.payload };
   }
 }
