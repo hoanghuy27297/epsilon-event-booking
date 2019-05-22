@@ -25,6 +25,7 @@ export interface IEvent extends IDateTracking {
 }
 
 export class Event extends DateTracking implements IEvent {
+  id = '';
   name = '';
   place = '';
   time = '';
@@ -40,9 +41,9 @@ export class Event extends DateTracking implements IEvent {
   private _admins = [];
   private _status: EventStatus = new EventStatus();
 
-  constructor(data?: IEvent | any) {
+  constructor(data?: IEvent | any, id?: string) {
     super();
-    this.fromJSON(data);
+    this.fromJSON(data, id);
   }
 
   getRawValue(data: IEvent | any): Event {
@@ -65,11 +66,12 @@ export class Event extends DateTracking implements IEvent {
     return this;
   }
 
-  fromJSON(data: IEvent | any): Event {
+  fromJSON(data: IEvent | any, id?: string): Event {
     if (!data) return this;
     const dataSource = this;
 
     super.fromJSON(data);
+    this.id = id || dataSource.id || '';
     this.name = data.name || dataSource.name || '';
     this.place = data.place || dataSource.place || '';
     this.date = data.date || dataSource.date || '';
@@ -89,6 +91,10 @@ export class Event extends DateTracking implements IEvent {
 
   get status(): EventStatusEnum {
     return this._status ? this._status.code : EventStatusEnum.Available;
+  }
+
+  set status(status: EventStatusEnum) {
+    this._status = new EventStatus(status);
   }
 
   get statusName(): EventStatusTypes {
@@ -125,6 +131,7 @@ export class Event extends DateTracking implements IEvent {
 
   toJSON(): IEvent {
     return {
+      id: this.id,
       name: this.name,
       place: this.place,
       date: this.date,

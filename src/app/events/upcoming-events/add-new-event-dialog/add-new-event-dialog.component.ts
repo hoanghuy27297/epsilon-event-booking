@@ -146,9 +146,14 @@ export class AddNewEventDialogComponent implements OnInit {
           this.user.events.permission = ADMIN_PERMISSION;
 
           // add to the yourEvents collections in the admin document field a new event
-          await this.db
+          this.db
             .doc(`users/${this.userId}/yourEvents/${result.id}`)
             .set(this.user.events.toJSON());
+
+          this.event = new Event(data, result.id)
+          this.db
+            .doc(`events/${result.id}`)
+            .set(this.event.toJSON())
 
         }
       }

@@ -3,7 +3,7 @@ import * as _moment from 'moment';
 import { AddNewEventDialogComponent } from './add-new-event-dialog/add-new-event-dialog.component';
 import { map, takeUntil } from 'rxjs/operators';
 import { ROUTE_ANIMATIONS_ELEMENTS } from '@app/core/animations/route.animations';
-import { AppState, selectUser } from '@app/core';
+import { AppState, selectUser, selectUserId } from '@app/core';
 import { Store, select } from '@ngrx/store';
 import {
   Component,
@@ -25,6 +25,8 @@ import { User } from '@app/shared/models/user.model';
 import { DateTime } from '@app/shared/models/datetime.model';
 import { selectEventList } from '../events.selector';
 import { EventList } from '../events.actions';
+import { EventStatusEnum } from '@app/shared/models/status.model';
+import { UserEvent } from '@app/shared/models/user-event.model';
 
 @Component({
   selector: 'epsilon-upcoming-events',
@@ -49,6 +51,7 @@ export class UpcomingEventsComponent implements OnInit {
   ];
   user$: Observable<User>;
   eventList$: Observable<any>;
+  userId = '';
 
   private _unsubscribeAll: Subject<any> = new Subject();
   constructor(
@@ -64,6 +67,9 @@ export class UpcomingEventsComponent implements OnInit {
       select(selectUser),
       map(user => user)
     );
+    this.store
+      .pipe(select(selectUserId))
+      .subscribe(state => this.userId = state);
 
     this.getAllEvent();
 
@@ -84,7 +90,43 @@ export class UpcomingEventsComponent implements OnInit {
       .subscribe(data => {
         let events: Event[] = [];
         data.forEach(result => {
-          events = [new Event(result.payload.doc.data()), ...events];
+          const eventId = result.payload.doc.id;
+          const eventData = result.payload.doc.data();
+          const event = new Event(eventData, eventId);
+
+          // Update status of events
+          // level of status checking
+          // |-Past
+          // |--Booked
+          // |---Full
+          // |----Saved
+          // |-----Available
+          const isTimeAvailable = new DateTime().compareWithCurrent(
+            event.date,
+            event.time
+          );
+          const isFull = event.capacity - event.amount; // check number of joinalble people left
+
+          // check upcoming event or past event
+          if (isTimeAvailable < 0 && event.status !== EventStatusEnum.Past) {
+            event.status = EventStatusEnum.Past;
+
+            // Update list past status for list of events
+            this.db
+              .doc(`events/${eventId}`)
+              .set(event.toJSON(), { merge: true });
+
+          } else if (
+            // Check full status of event
+            isFull === 0 &&
+            event.status !== EventStatusEnum.Full &&
+            event.status !== EventStatusEnum.Past &&
+            event.status !== EventStatusEnum.Booked
+          ) {
+            event.status = EventStatusEnum.Full;
+          }
+
+          events = [event, ...events];
         });
         this.store.dispatch(new EventList(events));
       });
