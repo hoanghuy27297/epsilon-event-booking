@@ -7,9 +7,10 @@ import { YourEventsComponent } from './your-events/your-events.component';
 import { SharedModule } from '@app/shared';
 import { AddNewEventDialogComponent } from './upcoming-events/add-new-event-dialog/add-new-event-dialog.component';
 import { StoreModule } from '@ngrx/store';
+import { SelectedEventDialogComponent } from './selected-event-dialog/selected-event-dialog.component';
 
 @NgModule({
-  declarations: [UpcomingEventsComponent, YourEventsComponent, AddNewEventDialogComponent],
+  declarations: [UpcomingEventsComponent, YourEventsComponent, AddNewEventDialogComponent, SelectedEventDialogComponent],
   imports: [
     CommonModule,
     SharedModule,
@@ -17,7 +18,8 @@ import { StoreModule } from '@ngrx/store';
     StoreModule.forFeature(FEATURE_EVENT, reducers)
   ],
   entryComponents: [
-    AddNewEventDialogComponent
+    AddNewEventDialogComponent,
+    SelectedEventDialogComponent
   ],
 })
 export class EventsModule { }

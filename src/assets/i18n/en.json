@@ -84,6 +84,7 @@
   "epsilon.register.position": "Position",
 
   "epsilon.events": "Events",
+  "epsilon.event": "Event",
   "epsilon.events.addNew": "Add New Event",
   "epsilon.events.createNewEvent": "Create A New Event",
   "epsilon.events.name": "Event name",

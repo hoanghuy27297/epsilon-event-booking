@@ -27,6 +27,7 @@ import { selectEventList } from '../events.selector';
 import { EventList } from '../events.actions';
 import { EventStatusEnum } from '@app/shared/models/status.model';
 import { UserEvent } from '@app/shared/models/user-event.model';
+import { SelectedEventDialogComponent } from '../selected-event-dialog/selected-event-dialog.component';
 
 @Component({
   selector: 'epsilon-upcoming-events',
@@ -150,5 +151,12 @@ export class UpcomingEventsComponent implements OnInit {
     // Unsubscribe from all subscriptions
     this._unsubscribeAll.next();
     this._unsubscribeAll.complete();
+  }
+
+  onSelectEvent(data: Event) {
+    this.dialog.open(SelectedEventDialogComponent, {
+      width: '65%',
+      data
+    })
   }
 }

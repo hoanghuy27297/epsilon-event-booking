@@ -120,6 +120,10 @@ export class AddNewEventDialogComponent implements OnInit {
     this.dateTime = new DateTime(event.value);
   }
 
+  onCancel(): void {
+    this.dialogRef.close();
+  }
+
   onAddEvent() {
     const time = this.formGroup.get('time').value;
     const date = this.dateTime.getDateWithFormat();
