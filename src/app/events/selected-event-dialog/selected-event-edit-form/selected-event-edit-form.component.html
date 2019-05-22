@@ -1,0 +1,119 @@
+<h1 mat-dialog-title>{{ 'epsilon.menu.update' | translate }} {{ event.name }} {{ 'epsilon.event' | translate }}</h1>
+<div mat-dialog-content>
+  <form [formGroup]="formGroup">
+    <!-- NAME AND PLACE -->
+    <div class="d-flex row justify-content-between">
+      <mat-form-field class="col-md-6" [ngClass]="routeAnimationsElements">
+        <input matInput formControlName="name" placeholder="{{ 'epsilon.events.name' | translate }}" required>
+        <mat-error *ngIf="formErrors.name">
+          {{ formErrors.name }}
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="col-md-6" [ngClass]="routeAnimationsElements">
+        <input matInput formControlName="place" placeholder="{{ 'epsilon.events.place' | translate }}" required>
+        <mat-error *ngIf="formErrors.place">
+          {{ formErrors.place }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <!-- / NAME AND PLACE -->
+
+    <!-- DATE AND TIME -->
+    <div class="d-flex row justify-content-between">
+      <mat-form-field class="col-md-6" [ngClass]="routeAnimationsElements">
+        <input matInput formControlName="date"
+          [matDatepicker]="datePicker" class="content-details"
+          (dateInput)="onDateChanged('input', $event)" (dateChange)="onDateChanged('change', $event)"
+          placeholder="{{ 'epsilon.events.date' | translate }}" required>
+        <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+        <mat-datepicker #datePicker touchUi="true"></mat-datepicker>
+        <mat-hint [align]="'end'">DD/MM/YYYY</mat-hint>
+        <mat-error *ngIf="formErrors.date">
+          {{ formErrors.date }}
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="col-md-6" [ngClass]="routeAnimationsElements">
+        <input matInput formControlName="time" placeholder="{{ 'epsilon.events.time' | translate }}" required>
+        <mat-error *ngIf="formErrors.time">
+          {{ formErrors.time }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <!-- / DATE AND TIME -->
+
+    <!-- PRICE AND CAPACITY -->
+    <div class="d-flex row justify-content-between">
+      <div class="d-flex col-md-6 align-items-center justify-content-between" [ngClass]="routeAnimationsElements">
+        <span>{{ 'epsilon.events.ticketPrice' | translate }}:</span>
+        <mat-form-field class="number-input">
+          <input matInput formControlName="price">
+        </mat-form-field>
+      </div>
+      <div class="d-flex col-md-6 align-items-center justify-content-between" [ngClass]="routeAnimationsElements">
+        <span>{{ 'epsilon.events.amountOfPeople' | translate }}* :</span>
+        <mat-form-field class="number-input">
+          <input matInput formControlName="capacity">
+          <mat-error *ngIf="formErrors.capacity">
+            {{ formErrors.capacity }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <!-- / PRICE AND CAPACITY -->
+
+    <!-- DISCOUNT AND PROMOTION CODE -->
+    <div class="d-flex row justify-content-between">
+      <div class="d-flex col-md-6 align-items-center justify-content-between" [ngClass]="routeAnimationsElements">
+        <span>{{ 'epsilon.events.discount' | translate }}:</span>
+        <mat-form-field class="number-input">
+          <input matInput formControlName="discount">
+        </mat-form-field>
+      </div>
+      <div class="d-flex col-md-6 align-items-center justify-content-between" [ngClass]="routeAnimationsElements">
+        <span>{{ 'epsilon.events.promotionCode' | translate }}:</span>
+        <mat-form-field class="number-input">
+          <input matInput formControlName="promotionCode">
+          <mat-error *ngIf="formErrors.promotionCode">
+            {{ formErrors.promotionCode }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <!-- / DISCOUNT AND PROMOTION CODE -->
+
+    <!-- DESCRIPTION -->
+    <div [ngClass]="routeAnimationsElements">
+      <mat-form-field class="full-width">
+        <textarea matInput formControlName="description" placeholder="{{ 'epsilon.events.description' | translate }}"></textarea>
+      </mat-form-field>
+    </div>
+    <!-- / DESCRIPTION -->
+
+  </form>
+  <!-- ADD MORE ADMIN -->
+  <!-- <div mat-dialog-content class="row">
+    <span class="add-admin" *ngIf="!isAddingAdmin" (click)="onAddMoreAdmins()">+ Add more admins</span>
+    <form [formGroup]="adminFormGroup" *ngIf="isAddingAdmin">
+      <mat-form-field class="add-admin">
+        <input matInput formControlName="email" placeholder="Admin's email">
+        <mat-error *ngIf="adminFormErrors.email">
+          {{ adminFormErrors.email }}
+        </mat-error>
+      </mat-form-field>
+    </form>
+  </div> -->
+  <!-- / ADD MORE ADMIN -->
+
+  <!-- <span class="warning_title">* the field must have before submission</span> -->
+</div>
+<div class="d-flex justify-content-between action full-width">
+  <button type="button" mat-raised-button color="warn" (click)="onCancelUpdate($event.value)">Cancel</button>
+  <div class="d-flex column align-items-center">
+    <button mat-button class="delete-button">
+      <fa-icon icon="trash-alt" [matTooltip]="'Delete'"
+        matTooltipPosition="left" class="delete-button_icon">
+      </fa-icon>
+    </button>
+    <button type="button" mat-raised-button color="accent" (click)="onUpdateEvent($event.value)">Update</button>
+  </div>
+</div>

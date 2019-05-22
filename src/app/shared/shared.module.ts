@@ -51,7 +51,8 @@ import {
   faWindowMaximize,
   faStream,
   faBook,
-  faIdCard
+  faIdCard,
+  faTrashAlt
 } from '@fortawesome/free-solid-svg-icons';
 import {
   faGithub,
@@ -92,7 +93,8 @@ library.add(
   faWindowMaximize,
   faStream,
   faBook,
-  faIdCard
+  faIdCard,
+  faTrashAlt
 );
 
 import { BigInputComponent } from './big-input/big-input.component';

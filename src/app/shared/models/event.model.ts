@@ -62,7 +62,7 @@ export class Event extends DateTracking implements IEvent {
     this.discount = data.discount || dataSource.discount || 0;
     this.promotionCode = data.promotionCode || dataSource.promotionCode || [];
     this._status = new EventStatus(data.status) || new EventStatus();
-    this.description = data.description || dataSource.description || '';
+    this.description = data.description || '';
     this.admins = data.admins || dataSource.admins || [];
 
     return this;
@@ -85,7 +85,7 @@ export class Event extends DateTracking implements IEvent {
     this.discount = data.discount || dataSource.discount || 0;
     this.promotionCode = data.promotionCode || dataSource.promotionCode || [];
     this._status = new EventStatus(data.status) || new EventStatus();
-    this.description = data.description || dataSource.description || '';
+    this.description = data.description || '';
     this.admins = data.admins || dataSource.admins || [];
 
     return this;

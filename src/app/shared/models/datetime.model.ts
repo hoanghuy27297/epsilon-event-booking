@@ -26,6 +26,10 @@ export class DateTime {
     return _moment(new Date()).toDate();
   }
 
+  stringToDate(date: string): Date {
+    return _moment(date, 'DD/MM/YYYY').toDate();
+  }
+
   addDays(dateNumber: number = 1): Date {
     return _moment(this.currentDate)
       .add(dateNumber, 'days')

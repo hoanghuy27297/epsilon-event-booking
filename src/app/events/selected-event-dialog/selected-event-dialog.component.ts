@@ -34,6 +34,7 @@ export class SelectedEventDialogComponent implements OnInit, OnDestroy {
   permission$: Observable<number>;
   status$: Observable<any>;
   yourEvent: any;
+  isEditing = false;
 
   constructor(
     private fb: FormBuilder,
@@ -71,6 +72,7 @@ export class SelectedEventDialogComponent implements OnInit, OnDestroy {
       .doc(`users/${this.userId}/yourEvents/${this.data.id}`)
       .valueChanges()
       .pipe(takeUntil(this._unsubscribeAll), map((result: UserEvent) => {
+        console.log(result);
         if (result) {
           return new EventStatus(result.status);
         }
@@ -86,7 +88,20 @@ export class SelectedEventDialogComponent implements OnInit, OnDestroy {
 
   }
 
-  onEditEvent() {}
+  onEditEvent() {
+    this.isEditing = true;
+  }
+
+  onCancelEditEvent(cancelUpdate: boolean) {
+    if (cancelUpdate) this.isEditing = false;
+  }
+
+  onFinishEditEvent(updatedEvent: any) {
+    this.yourEvent = new Event(updatedEvent, updatedEvent.id);
+    if (updatedEvent.permission) {
+      this.yourEvent = new UserEvent(this.yourEvent.toJSON(), updatedEvent.permission);
+    }
+  }
 
   async onSaveEvent() {
     try {

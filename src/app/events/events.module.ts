@@ -10,9 +10,10 @@ import { AddNewEventDialogComponent } from './upcoming-events/add-new-event-dial
 import { StoreModule } from '@ngrx/store';
 import { SelectedEventDialogComponent } from './selected-event-dialog/selected-event-dialog.component';
 import { EventEffects } from './events.effects';
+import { SelectedEventEditFormComponent } from './selected-event-dialog/selected-event-edit-form/selected-event-edit-form.component';
 
 @NgModule({
-  declarations: [UpcomingEventsComponent, YourEventsComponent, AddNewEventDialogComponent, SelectedEventDialogComponent],
+  declarations: [UpcomingEventsComponent, YourEventsComponent, AddNewEventDialogComponent, SelectedEventDialogComponent, SelectedEventEditFormComponent],
   imports: [
     CommonModule,
     SharedModule,
