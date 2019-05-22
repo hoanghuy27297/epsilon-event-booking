@@ -1,3 +1,4 @@
+import { EventStatusEnum } from './status.model';
 import { IEvent, Event } from './event.model';
 
 export interface IUserEvent extends IEvent {

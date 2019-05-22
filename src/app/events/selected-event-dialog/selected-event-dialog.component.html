@@ -1,10 +1,27 @@
+<div *ngIf="!(permission$ | async)">
+  <button *ngIf="status$ | async as status; else notSaved"
+    type="button" mat-button
+    [ngClass]="status.code === 4 ? 'saved-button' : 'save-button'"
+    (click)="status.code === 4 ? onUnsaveEvent() : onSaveEvent()"
+    >
+    {{status.code === 4 ? 'Unaved' : 'Save'}}
+  </button>
+  <ng-template #notSaved>
+      <button type="button" mat-button class="save-button" (click)="onSaveEvent()">Save</button>
+  </ng-template>
+</div>
 <h1 mat-dialog-title class="title">{{ data.name }} {{'epsilon.event' | translate}}</h1>
 <div mat-dialog-content class="content-wrapper">
   <!-- EVENT INFORMATION -->
   <div class="event-information">
-    <div class="badge event-information_badge" [ngClass]="data.statusClassName">
-      {{ data.statusName }}
+    <div *ngIf="status$ | async as status; else noStatus" class="badge event-information_badge" [ngClass]="status.statusClassName">
+      {{ status.name }}
     </div>
+    <ng-template #noStatus>
+      <div class="badge event-information_badge" [ngClass]="data.statusClassName">
+        {{ data.statusName }}
+      </div>
+    </ng-template>
     <div class="row">
       <span class="label">{{ 'epsilon.events.name' | translate }}:</span>
       <span class="label-content">{{ data.name }}</span>
@@ -34,5 +51,8 @@
 </div>
 <div class="d-flex justify-content-between action full-width">
   <button type="button" mat-raised-button color="warn" (click)="onCancel()">Cancel</button>
-  <button type="button" mat-raised-button color="accent">Create</button>
+  <button type="button" *ngIf="permission$ | async as permission; else notAdmin" [disabled]="data.status === 1 || data.status === 2" mat-raised-button color="primary">Edit</button>
+  <ng-template #notAdmin>
+    <button type="button" [disabled]="data.status === 1 || data.status === 2" mat-raised-button color="accent">Book</button>
+  </ng-template>
 </div>

@@ -9,7 +9,8 @@ import {
   Component,
   OnInit,
   ChangeDetectionStrategy,
-  ViewChild
+  ViewChild,
+  OnDestroy
 } from '@angular/core';
 import {
   MatTableDataSource,
@@ -35,7 +36,7 @@ import { SelectedEventDialogComponent } from '../selected-event-dialog/selected-
   styleUrls: ['./upcoming-events.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UpcomingEventsComponent implements OnInit {
+export class UpcomingEventsComponent implements OnInit, OnDestroy {
   routeAnimationsElements = ROUTE_ANIMATIONS_ELEMENTS;
   dataSource: MatTableDataSource<Event> = new MatTableDataSource();
   @ViewChild(MatPaginator)
@@ -156,7 +157,7 @@ export class UpcomingEventsComponent implements OnInit {
   onSelectEvent(data: Event) {
     this.dialog.open(SelectedEventDialogComponent, {
       width: '65%',
-      data
+      data: data.toJSON()
     })
   }
 }

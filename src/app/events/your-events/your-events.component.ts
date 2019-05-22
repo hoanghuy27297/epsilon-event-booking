@@ -1,7 +1,7 @@
 import { UserEvent } from './../../shared/models/user-event.model';
 import { EventStatusEnum } from './../../shared/models/status.model';
 import { User } from './../../shared/models/user.model';
-import { Component, OnInit, ChangeDetectionStrategy, ViewChild } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ViewChild, OnDestroy } from '@angular/core';
 import { ROUTE_ANIMATIONS_ELEMENTS, AppState, selectUser, selectUserId } from '@app/core';
 import { MatTableDataSource, MatPaginator, MatSort, MatDialog } from '@angular/material';
 import { Observable, Subject } from 'rxjs';
@@ -19,7 +19,7 @@ import { selectYourEventList } from '../events.selector';
   styleUrls: ['./your-events.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class YourEventsComponent implements OnInit {
+export class YourEventsComponent implements OnInit, OnDestroy {
   routeAnimationsElements = ROUTE_ANIMATIONS_ELEMENTS;
   dataSource: MatTableDataSource<UserEvent> = new MatTableDataSource();
   @ViewChild(MatPaginator)
@@ -133,7 +133,7 @@ export class YourEventsComponent implements OnInit {
   onSelectEvent(data: UserEvent) {
     this.dialog.open(SelectedEventDialogComponent, {
       width: '65%',
-      data
+      data: data.toJSON()
     })
   }
 }
