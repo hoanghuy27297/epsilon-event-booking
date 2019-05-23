@@ -46,6 +46,8 @@ export class UserRules {
     public static idMaxLength = 10;
     public static idMinLength = 6;
     public static eventTime = /[0-9]{2}\:[0-9]{2}/;
+    public static cardNumber = /[0-9]{4}\-[0-9]{4}\-[0-9]{4}\-[0-9]{4}/;
+    public static expire = /[0-9]{2}\/[0-9]{2}/;
   }
 
   export const validationMessages = {
@@ -160,6 +162,8 @@ export class UserRules {
       required: 'Card number is required'
     },
     ccv: {
+      required: 'CCV number is required',
+      pattern: 'CCV number contains number only',
       maxlength: `Verifycation|CCV code cannot be more than ${
         UserRules.ccvMaxLength
       } characters long.`
@@ -172,7 +176,7 @@ export class UserRules {
     },
     time: {
       required: 'Your event\'s time is required',
-      pattern: 'Your event\'s time must be corrected with HH:mm format.'
+      pattern: 'Your event\'s time must match format HH:mm.'
     },
     capacity: {
       required: 'The capacity of people is required',
@@ -187,4 +191,18 @@ export class UserRules {
     date: {
       required: 'Event\'s date is required'
     },
+    cardName: {
+      required: 'Your name on card is required'
+    },
+    cardNumber: {
+      required: 'Your card number is required',
+      pattern: 'Card number must match format XXXX-XXXX-XXXX-XXXX'
+    },
+    expire: {
+      required: 'Expire date of card is required',
+      pattern: 'Expire date must match format MM/YY'
+    },
+    tickets: {
+      pattern: 'Number of ticket contains number only.'
+    }
   };

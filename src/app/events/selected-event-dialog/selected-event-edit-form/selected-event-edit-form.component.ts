@@ -73,7 +73,7 @@ export class SelectedEventEditFormComponent implements OnInit {
   adminFormGroup: FormGroup;
   event: Event = new Event();
   yourEvent: UserEvent = new UserEvent();
-  dateTime: DateTime = new DateTime(new Date());
+  dateTime: DateTime;
   userId: string;
   user: User = new User();
   isAddingAdmin = false;
@@ -165,10 +165,14 @@ export class SelectedEventEditFormComponent implements OnInit {
 
   onUpdateEvent() {
     // config event time
-    const time = this.formGroup.get('time').value;
-    const date = this.dateTime.getDateWithFormat();
+    let date = this.event.date;
+    let time = this.event.time;
     this.event = this.event.getRawValue(this.formGroup.getRawValue());
-    this.event.eventTime = this.dateTime.combineDateWithFormat(date, time);
+    if (this.dateTime) {
+      date = this.dateTime.getDateWithFormat();
+      time = this.formGroup.get('time').value;
+    }
+    this.event.eventTime = new DateTime().combineDateWithFormat(date, time);
     this.event.date = date;
 
     // config event status

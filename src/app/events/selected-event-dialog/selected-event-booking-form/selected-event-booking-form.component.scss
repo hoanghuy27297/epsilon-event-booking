@@ -1,0 +1,27 @@
+.event-information {
+  font-size: 16px;
+  padding: 0 15px;
+  position: relative;
+  .row {
+    line-height: 30px;
+  }
+
+  .label {
+    font-weight: 700;
+    margin-right: 10px;
+  }
+
+  .label_description {
+    margin-left: -15px;
+  }
+
+  .label-content-description {
+    padding-left: 5px;
+  }
+
+  .number-input {
+    width: 70px;
+    margin-left: 15px;
+    text-align: center;
+  }
+}

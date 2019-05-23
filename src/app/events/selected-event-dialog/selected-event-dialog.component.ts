@@ -35,6 +35,7 @@ export class SelectedEventDialogComponent implements OnInit, OnDestroy {
   status$: Observable<any>;
   yourEvent: any;
   isEditing = false;
+  isBooking = false;
 
   constructor(
     private fb: FormBuilder,
@@ -89,7 +90,11 @@ export class SelectedEventDialogComponent implements OnInit, OnDestroy {
   }
 
   onBookEvent() {
+    this.isBooking = true;
+  }
 
+  onCancelBooking(cancelBooking: boolean) {
+    if (cancelBooking) this.isBooking = false;
   }
 
   onEditEvent() {

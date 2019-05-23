@@ -1,0 +1,106 @@
+<h1 mat-dialog-title>{{ 'epsilon.events.makeBooking' | translate }} {{ 'epsilon.event' | translate }}</h1>
+<div mat-dialog-content>
+  <mat-vertical-stepper [linear]="true" #stepper>
+    <mat-step>
+      <ng-template matStepLabel>{{ 'epsilon.events.booking.eventInfo' | translate }}</ng-template>
+
+      <!-- EVENT INFORMATION -->
+      <div class="event-information">
+        <div class="row">
+          <span class="label">{{ 'epsilon.events.name' | translate }}:</span>
+          <span class="label-content">{{ event.name }}</span>
+        </div>
+        <div class="row">
+          <span class="label">{{ 'epsilon.events.place' | translate }}:</span>
+          <span class="label-content">{{ event.place }}</span>
+        </div>
+        <div class="row">
+          <span class="label">{{ 'epsilon.events.time' | translate }}:</span>
+          <span class="label-content">{{ event.time }} {{ event.date }}</span>
+        </div>
+        <div class="row">
+          <span class="label">{{ 'epsilon.events.price' | translate }}:</span>
+          <span class="label-content">${{ event.price }}</span>
+        </div>
+        <div class="row">
+          <span class="label">{{ 'epsilon.events.amountOfPeople' | translate }}:</span>
+          <span class="label-content">{{ event.amount }}/{{ event.capacity }}</span>
+        </div>
+        <div style="line-height: 30px">
+          <span class="label label_description">{{ 'epsilon.events.description' | translate }}:</span>
+          <div class="label-content label-content_description">{{ event.description }}</div>
+        </div>
+      </div>
+      <!-- / EVENT INFORMATION -->
+
+      <div>
+
+        <!-- BILL INFORMATION -->
+        <div class="event-information">
+          <div class=" d-flex row align-items-center">
+            <span class="label">{{ 'epsilon.events.booking.tickets' | translate }}:</span>
+            <div>
+              <input matInput [(ngModel)]="total">
+            </div>
+          </div>
+          <div class="row">
+            <span>Total: </span>
+            <span>{{ total }}</span>
+          </div>
+        </div>
+        <!-- / BILL INFORMATION -->
+
+        <button type="button" mat-raised-button color="primary" matStepperNext>Next</button>
+      </div>
+    </mat-step>
+    <mat-step [stepControl]="formGroup">
+      <form [formGroup]="formGroup">
+        <ng-template matStepLabel>{{ 'epsilon.events.booking.cardDetail' | translate }}</ng-template>
+
+        <!-- CARD INFORMATION -->
+        <mat-form-field>
+          <input matInput formControlName="cardName" placeholder="{{ 'epsilon.events.booking.cardName' | translate }}" required>
+          <mat-error *ngIf="formErrors.cardName">
+            {{ formErrors.cardName }}
+          </mat-error>
+        </mat-form-field>
+
+        <div class="row">
+          <mat-form-field class="col-md-6">
+            <input matInput formControlName="cardNumber" placeholder="{{ 'epsilon.events.booking.cardNumber' | translate }}" required>
+            <mat-error *ngIf="formErrors.cardNumber">
+              {{ formErrors.cardNumber }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="col-md-3">
+            <input matInput formControlName="expire" placeholder="{{ 'epsilon.events.booking.expire' | translate }}" required>
+            <mat-error *ngIf="formErrors.expire">
+              {{ formErrors.expire }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="col-md-3">
+            <input matInput formControlName="ccv" placeholder="{{ 'epsilon.events.booking.ccv' | translate }}" required>
+            <mat-error *ngIf="formErrors.ccv">
+              {{ formErrors.ccv }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <!-- / CARD INFORMATION -->
+
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Done</ng-template>
+      You are now done.
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button (click)="stepper.reset()">Reset</button>
+      </div>
+    </mat-step>
+  </mat-vertical-stepper>
+</div>
+<button type="button" mat-raised-button color="warn" (click)="onCancelBooking($event.value)">Cancel</button>

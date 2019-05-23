@@ -11,9 +11,10 @@ import { StoreModule } from '@ngrx/store';
 import { SelectedEventDialogComponent } from './selected-event-dialog/selected-event-dialog.component';
 import { EventEffects } from './events.effects';
 import { SelectedEventEditFormComponent } from './selected-event-dialog/selected-event-edit-form/selected-event-edit-form.component';
+import { SelectedEventBookingFormComponent } from './selected-event-dialog/selected-event-booking-form/selected-event-booking-form.component';
 
 @NgModule({
-  declarations: [UpcomingEventsComponent, YourEventsComponent, AddNewEventDialogComponent, SelectedEventDialogComponent, SelectedEventEditFormComponent],
+  declarations: [UpcomingEventsComponent, YourEventsComponent, AddNewEventDialogComponent, SelectedEventDialogComponent, SelectedEventEditFormComponent, SelectedEventBookingFormComponent],
   imports: [
     CommonModule,
     SharedModule,

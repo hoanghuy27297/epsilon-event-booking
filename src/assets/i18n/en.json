@@ -97,7 +97,16 @@
   "epsilon.events.promotionCode": "Promotion code",
   "epsilon.events.discount": "Discount",
   "epsilon.events.description": "Event description",
+  "epsilon.events.makeBooking": "Make Booking For",
+  "epsilon.events.booking.eventInfo": "Your Booking Event Information",
+  "epsilon.events.booking.cardDetail": "Your Bank Card Information",
+  "epsilon.events.booking.cardName": "Name on Card",
+  "epsilon.events.booking.cardNumber": "Card Number",
+  "epsilon.events.booking.expire": "Expire date",
+  "epsilon.events.booking.ccv": "CCV",
+  "epsilon.events.booking.tickets": "Number of tickets",
 
   "epsilon.yourEvents": "Your Events"
+
 
 }
