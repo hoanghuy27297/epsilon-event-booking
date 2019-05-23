@@ -42,6 +42,7 @@ export class SelectedEventBookingFormComponent implements OnInit {
   data: any = {};
   @Output()
   cancelBooking: EventEmitter<boolean> = new EventEmitter();
+  numberOfTickets = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -84,11 +85,7 @@ export class SelectedEventBookingFormComponent implements OnInit {
   }
 
   get total(): number {
-    return this._total;
-  }
-
-  set total(value: number) {
-    this._total = value * this.event.price;
+    return this.numberOfTickets * this.event.price;
   }
 
   onCancelBooking() {
