@@ -1,3 +1,4 @@
+import { selectUser } from './core/auth/auth.selectors';
 import { NavigationService } from './core/navigation/navigation.service';
 import browser from 'browser-detect';
 import { Component, OnInit } from '@angular/core';
@@ -40,6 +41,10 @@ export class AppComponent implements OnInit {
     { link: 'events', label: 'epsilon.events' },
     { link: 'your-events', label: 'epsilon.yourEvents' }
   ];
+  adminNavigation = [
+    { link: 'about', label: 'epsilon.menu.about' },
+    { link: 'events', label: 'epsilon.events' },
+  ]
   navigationSideMenu = [
     ...this.navigation,
     { link: 'settings', label: 'epsilon.menu.settings' }
@@ -49,6 +54,7 @@ export class AppComponent implements OnInit {
   stickyHeader$: Observable<boolean>;
   language$: Observable<string>;
   theme$: Observable<string>;
+  user$: Observable<any>;
 
   constructor(
     private store: Store<AppState>,
@@ -74,6 +80,7 @@ export class AppComponent implements OnInit {
     this.stickyHeader$ = this.store.pipe(select(selectSettingsStickyHeader));
     this.language$ = this.store.pipe(select(selectSettingsLanguage));
     this.theme$ = this.store.pipe(select(selectEffectiveTheme));
+    this.user$ = this.store.pipe(select(selectUser));
   }
 
   onLoginClick() {

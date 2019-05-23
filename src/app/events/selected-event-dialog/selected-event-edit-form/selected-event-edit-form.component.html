@@ -106,10 +106,10 @@
 
   <!-- <span class="warning_title">* the field must have before submission</span> -->
 </div>
-<div class="d-flex justify-content-between action full-width">
+<div *ngIf="!onDeleting; else deleteEvent" class="d-flex justify-content-between action full-width">
   <button type="button" mat-raised-button color="warn" (click)="onCancelUpdate($event.value)">Cancel</button>
   <div class="d-flex column align-items-center">
-    <button mat-button class="delete-button">
+    <button mat-button class="delete-button" (click)="onDeleteClick()">
       <fa-icon icon="trash-alt" [matTooltip]="'Delete'"
         matTooltipPosition="left" class="delete-button_icon">
       </fa-icon>
@@ -117,3 +117,10 @@
     <button type="button" mat-raised-button color="accent" (click)="onUpdateEvent($event.value)">Update</button>
   </div>
 </div>
+
+<ng-template #deleteEvent>
+  <div class="d-flex justify-content-between action full-width">
+    <button type="button" mat-raised-button color="warn" (click)="onDeleteClick()">No, just misclick!</button>
+    <button type="button" mat-raised-button color="accent" (click)="onDeleteEvent()">Yes, delete it please!</button>
+  </div>
+</ng-template>

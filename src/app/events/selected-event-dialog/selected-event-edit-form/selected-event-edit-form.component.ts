@@ -78,6 +78,7 @@ export class SelectedEventEditFormComponent implements OnInit {
   user: User = new User();
   isAddingAdmin = false;
   date: Date = new Date();
+  onDeleting = false;
 
   @Input()
   data: any = {};
@@ -85,6 +86,8 @@ export class SelectedEventEditFormComponent implements OnInit {
   cancelUpdate: EventEmitter<boolean> = new EventEmitter();
   @Output()
   updatedEvent: EventEmitter<any> = new EventEmitter();
+  @Output()
+  onCloseDialog: EventEmitter<boolean> = new EventEmitter();
 
   constructor(
     private fb: FormBuilder,
@@ -207,6 +210,50 @@ export class SelectedEventEditFormComponent implements OnInit {
     this.db
       .doc(`users/${this.userId}/yourEvents/${yourEvent.id}`)
       .set(yourEvent.toJSON(), { merge: true });
+  }
+
+  onDeleteClick() {
+    this.onDeleting = !this.onDeleting;
+  }
+
+  onDeleteEvent() {
+    // delete the event in events collection
+    this.db.doc(`events/${this.event.id}`).delete();
+
+    // find all users
+    this.db
+      .collection('users')
+      .snapshotChanges()
+      .subscribe(users => {
+        users.forEach(user => {
+          const userId = user.payload.doc.id;
+          // find all yourEvents in each users
+          this.db
+            .collection(`users/${userId}/yourEvents`)
+            .snapshotChanges()
+            .subscribe(events => {
+              // if user has yourEvents collection
+              if (events.length > 0) {
+                // compare current event's id to all events in yourEvents collection of user
+                const eventId = events.filter(
+                  event => event.payload.doc.id === this.event.id
+                );
+                // if user has the current event
+                if (eventId.length > 0) {
+                  // delete the current event in yourEvent collection of that user
+                  this.db
+                    .doc(`users/${userId}/yourEvents/${this.event.id}`)
+                    .delete();
+                }
+              }
+            });
+        });
+      });
+
+    this.notificationSvc.success(
+      `You have deleted event ${this.event.name} successfully!`
+    );
+    this.onCloseDialog.emit(true);
   }
 
   onCancelUpdate() {

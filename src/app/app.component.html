@@ -33,11 +33,20 @@
             }}</span>
 
           <span class="d-none d-md-inline">
-            <div *ngIf="(isAuthenticated$ | async)">
-              <button mat-button class="nav-button" *ngFor="let item of navigation" [routerLink]="[item.link]"
+            <div class="d-flex" *ngIf="user$ | async as user">
+              <span class="user">Hi, {{user.firstName}} {{user.lastName}}!</span>
+              <div *ngIf="user.role === 0; else adminNavigations">
+                <button mat-button class="nav-button" *ngFor="let item of navigation" [routerLink]="[item.link]"
                 routerLinkActive="active">
                 {{item.label | translate}}
-              </button>
+                </button>
+              </div>
+              <ng-template #adminNavigations>
+                <button mat-button class="nav-button" *ngFor="let item of adminNavigation" [routerLink]="[item.link]"
+                routerLinkActive="active">
+                {{item.label | translate}}
+                </button>
+              </ng-template>
             </div>
           </span>
 

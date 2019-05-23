@@ -60,5 +60,5 @@
 </div>
 
 <ng-template #onEditingEvent>
-  <epsilon-selected-event-edit-form [data]="yourEvent.toJSON()" (cancelUpdate)="onCancelEditEvent($event)" (updatedEvent)="onFinishEditEvent($event)"></epsilon-selected-event-edit-form>
+  <epsilon-selected-event-edit-form [data]="yourEvent.toJSON()" (cancelUpdate)="onCancelEditEvent($event)" (updatedEvent)="onFinishEditEvent($event)" (onCloseDialog)="onDeleteEventFinished($event)"></epsilon-selected-event-edit-form>
 </ng-template>

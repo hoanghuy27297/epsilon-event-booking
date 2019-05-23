@@ -84,6 +84,10 @@ export class SelectedEventDialogComponent implements OnInit, OnDestroy {
     this.dialogRef.close();
   }
 
+  onDeleteEventFinished(close: boolean) {
+    if (close) this.dialogRef.close();
+  }
+
   onBookEvent() {
 
   }
