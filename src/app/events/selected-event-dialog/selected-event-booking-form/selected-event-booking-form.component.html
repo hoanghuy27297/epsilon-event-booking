@@ -35,20 +35,33 @@
 
       <div>
 
-        <!-- BILL INFORMATION -->
-        <div class="event-information">
-          <div class=" d-flex row align-items-center">
-            <span class="label">{{ 'epsilon.events.booking.tickets' | translate }}:</span>
-            <div>
-              <input matInput class="number-input" style="border-bottom: 1px solid" [(ngModel)]="numberOfTickets">
-            </div>
-          </div>
-          <div class="row total">
-            <span>Total:</span>
-            <span style="margin-left: 5px">$ {{ total }}</span>
+      <!-- BILL INFORMATION -->
+      <div class="event-information">
+        <div class=" d-flex row align-items-center">
+          <span class="label">{{ 'epsilon.events.booking.tickets' | translate }}:</span>
+          <div>
+            <input matInput class="number-input" style="border-bottom: 1px solid" [(ngModel)]="numberOfTickets">
           </div>
         </div>
-        <!-- / BILL INFORMATION -->
+        <div style="margin-top: 10px;">
+          <span class="promotion-code" *ngIf="!isHavingCode; else codeInput" (click)="onFillPromotionCode()">You have a promotion code?</span>
+          <ng-template #codeInput>
+            <div class=" d-flex row align-items-center">
+              <span class="label">Promotion Code:</span>
+              <div>
+                <input matInput class="number-input" style="border-bottom: 1px solid" [(ngModel)]="promotionCode">
+              </div>
+              <button mat-button (click)="onApplyPromotionCode()">Apply</button>
+            </div>
+            <span *ngIf="wrongCode" style="color: red">This code is wrong, please try again!</span>
+          </ng-template>
+        </div>
+        <div class="row total">
+          <span>Total:</span>
+          <span style="margin-left: 5px">$ {{ total }}</span>
+        </div>
+      </div>
+      <!-- / BILL INFORMATION -->
 
         <button type="button" mat-raised-button color="primary" matStepperNext>Next</button>
       </div>

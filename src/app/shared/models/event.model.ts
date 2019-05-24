@@ -20,7 +20,7 @@ export interface IEvent extends IDateTracking {
   capacity: number,
   amount: number,
   discount: number,
-  promotionCode: Array<string>,
+  promotionCode: string,
   status: number,
   description: string,
   admins: Array<Object>,
@@ -34,7 +34,7 @@ export class Event extends DateTracking implements IEvent {
   price = 0;
   capacity = 0;
   discount = 0;
-  promotionCode = [];
+  promotionCode = '';
   description = '';
 
   private _amount = 0;
@@ -60,7 +60,7 @@ export class Event extends DateTracking implements IEvent {
     this.capacity = data.capacity || dataSource.capacity || 0;
     this.amount = data.amount || dataSource.amount || 0;
     this.discount = data.discount || dataSource.discount || 0;
-    this.promotionCode = data.promotionCode || dataSource.promotionCode || [];
+    this.promotionCode = data.promotionCode || dataSource.promotionCode || '';
     this._status = new EventStatus(data.status) || new EventStatus();
     this.description = data.description || '';
     this.admins = data.admins || dataSource.admins || [];
@@ -83,7 +83,7 @@ export class Event extends DateTracking implements IEvent {
     this.capacity = data.capacity || dataSource.capacity || 0;
     this.amount = data.amount || dataSource.amount || 0;
     this.discount = data.discount || dataSource.discount || 0;
-    this.promotionCode = data.promotionCode || dataSource.promotionCode || [];
+    this.promotionCode = data.promotionCode || dataSource.promotionCode || '';
     this._status = new EventStatus(data.status) || new EventStatus();
     this.description = data.description || '';
     this.admins = data.admins || dataSource.admins || [];

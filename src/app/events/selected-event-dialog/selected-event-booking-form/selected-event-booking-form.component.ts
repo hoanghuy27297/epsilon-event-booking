@@ -41,6 +41,13 @@ export class SelectedEventBookingFormComponent implements OnInit {
     ccv: ''
   };
   userId: string;
+  isHavingCode = false;
+  numberOfTickets = 1;
+  promotionCode = '';
+  promotionCodeInput = '';
+  wrongCode = false;
+  updatedTotal = 0;
+
   private _total = 0;
 
   @Input()
@@ -49,7 +56,6 @@ export class SelectedEventBookingFormComponent implements OnInit {
   cancelBooking: EventEmitter<boolean> = new EventEmitter();
   @Output()
   bookingData: EventEmitter<any> = new EventEmitter();
-  numberOfTickets = 1;
 
   constructor(
     private fb: FormBuilder,
@@ -92,7 +98,16 @@ export class SelectedEventBookingFormComponent implements OnInit {
   }
 
   get total(): number {
-    return this.numberOfTickets * this.event.price;
+    if (this.promotionCodeInput) {
+      this._total = (this.numberOfTickets * this.event.price) * (1 - this.event.discount / 100);
+    } else {
+      this._total = this.numberOfTickets * this.event.price;
+    }
+    return this._total;
+  }
+
+  set total(value: number) {
+    this._total = value;
   }
 
   onCancelBooking() {
@@ -133,5 +148,20 @@ export class SelectedEventBookingFormComponent implements OnInit {
     this.db
       .doc(`users/${this.userId}/yourEvents/${this.event.id}`)
       .set(yourEvent.toJSON());
+  }
+
+  onFillPromotionCode() {
+    this.isHavingCode = true;
+  }
+
+  onApplyPromotionCode() {
+    if (this.promotionCode === this.event.promotionCode) {
+      this.wrongCode = false;
+      this.promotionCodeInput = this.promotionCode;
+      this.updatedTotal = this.total - (this.total * this.event.discount / 100);
+      this.total = this.updatedTotal;
+    } else {
+      this.wrongCode = true;
+    }
   }
 }
