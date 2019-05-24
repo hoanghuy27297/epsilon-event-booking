@@ -4,7 +4,12 @@ import { Utility } from './../../../shared/helpers/utilities';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Event } from './../../../shared/models/event.model';
 import { ROUTE_ANIMATIONS_ELEMENTS } from './../../../core/animations/route.animations';
-import { NotificationService, AppState, selectUserId, selectUser } from '@app/core';
+import {
+  NotificationService,
+  AppState,
+  selectUserId,
+  selectUser
+} from '@app/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogRef,
@@ -40,7 +45,6 @@ type AdminField = 'email';
 type FormErrors = { [ef in EventField]: any };
 type AdminFormErrors = { [af in AdminField]: any };
 
-
 const ADMIN_PERMISSION = 1;
 const USER_PERMISSION = 0;
 
@@ -66,7 +70,7 @@ export class AddNewEventDialogComponent implements OnInit {
   };
   adminFormErrors: AdminFormErrors = {
     email: ''
-  }
+  };
   formGroup: FormGroup;
   adminFormGroup: FormGroup;
   event: Event = new Event();
@@ -85,10 +89,15 @@ export class AddNewEventDialogComponent implements OnInit {
   ) {
     this.store
       .pipe(select(selectUserId))
-      .subscribe(state => this.userId = state);
-    this.store
-      .pipe(select(selectUser))
-      .subscribe(state => this.user = new User(state));
+      .subscribe(state => (this.userId = state));
+
+    // get user
+    this.db
+      .doc(`users/${this.userId}`)
+      .valueChanges()
+      .subscribe(result => {
+        this.user = new User(result, this.userId);
+      });
   }
 
   ngOnInit() {
@@ -130,9 +139,11 @@ export class AddNewEventDialogComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]]
     });
 
-    this.adminFormGroup.valueChanges.pipe(debounceTime(500)).subscribe(values => {
-      Utility.onValueChanged(this.adminFormGroup, this.adminFormErrors);
-    })
+    this.adminFormGroup.valueChanges
+      .pipe(debounceTime(500))
+      .subscribe(values => {
+        Utility.onValueChanged(this.adminFormGroup, this.adminFormErrors);
+      });
   }
 
   onAddMoreAdmins() {
@@ -158,22 +169,33 @@ export class AddNewEventDialogComponent implements OnInit {
 
     // config admins for event
 
-
     this.createNewEvent(this.event);
   }
 
   async createNewEvent(data: Event): Promise<void | Event> {
     if (data) {
       try {
-        const result = await this.db
-          .collection('events')
-          .add(data.toJSON());
+        const result = await this.db.collection('events').add(data.toJSON());
         if (result.id) {
           this.dialogRef.close();
-          this.notificationSvc.success('You have added a new event successfully!');
+          this.notificationSvc.success(
+            'You have added a new event successfully!'
+          );
+
+          const time = new DateTime().getDateWithFormat('HH:mm DD/MM/YYYY');
+          const newHistoryAction = `You have created ${
+            data.name
+          } event at ${time}`;
+          const updatedHistory = [newHistoryAction, ...this.user.history];
+          this.user.history = updatedHistory;
+
+          //  update user
+          this.db
+            .doc(`users/${this.userId}`)
+            .set(this.user.toJSON(), { merge: true });
 
           // create event object with eventId and admin permission of this user to event
-          this.event = new Event(data, result.id)
+          this.event = new Event(data, result.id);
           const userEvent = new UserEvent(this.event.toJSON());
           // this.user.events = userEvent;
           // this.user.events.permission = ADMIN_PERMISSION;
@@ -184,13 +206,9 @@ export class AddNewEventDialogComponent implements OnInit {
             .doc(`users/${this.userId}/yourEvents/${result.id}`)
             .set(userEvent.toJSON());
 
-          this.db
-            .doc(`events/${result.id}`)
-            .set(this.event.toJSON())
-
+          this.db.doc(`events/${result.id}`).set(this.event.toJSON());
         }
-      }
-      catch (error) {
+      } catch (error) {
         return console.log(error);
       }
     }

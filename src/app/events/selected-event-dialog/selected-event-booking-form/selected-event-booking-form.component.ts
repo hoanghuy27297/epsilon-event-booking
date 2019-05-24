@@ -1,3 +1,4 @@
+import { DateTime } from './../../../shared/models/datetime.model';
 import { UserRules } from '@app/shared/validators/validators';
 import { Event } from './../../../shared/models/event.model';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -17,6 +18,7 @@ import { Utility } from '@app/shared/helpers/utilities';
 import { Observable } from 'rxjs';
 import { EventStatusEnum } from '@app/shared/models/status.model';
 import { UserEvent } from '@app/shared/models/user-event.model';
+import { User } from '@app/shared/models/user.model';
 
 type CardField = 'cardName' | 'cardNumber' | 'expire' | 'ccv';
 
@@ -47,6 +49,7 @@ export class SelectedEventBookingFormComponent implements OnInit {
   promotionCodeInput = '';
   wrongCode = false;
   updatedTotal = 0;
+  user: User = new User();
 
   private _total = 0;
 
@@ -72,6 +75,15 @@ export class SelectedEventBookingFormComponent implements OnInit {
     console.log(this.data);
     this.event = new Event(this.data, this.data.id);
     this.buildForm();
+
+    // get user
+    this.db
+      .doc(`users/${this.userId}`)
+      .valueChanges()
+      .subscribe(result => {
+        console.log(result);
+        this.user = new User(result);
+      });
   }
 
   buildForm() {
@@ -99,7 +111,10 @@ export class SelectedEventBookingFormComponent implements OnInit {
 
   get total(): number {
     if (this.promotionCodeInput) {
-      this._total = (this.numberOfTickets * this.event.price) * (1 - this.event.discount / 100);
+      this._total =
+        this.numberOfTickets *
+        this.event.price *
+        (1 - this.event.discount / 100);
     } else {
       this._total = this.numberOfTickets * this.event.price;
     }
@@ -127,6 +142,18 @@ export class SelectedEventBookingFormComponent implements OnInit {
       .doc(`events/${this.event.id}`)
       .set(this.event.toJSON(), { merge: true });
 
+    const time = new DateTime().getDateWithFormat('HH:mm DD/MM/YYYY');
+    const newHistoryAction = `You have booked ${
+      this.event.name
+    } event at ${time}`;
+    const updatedHistory = [newHistoryAction, ...this.user.history];
+    this.user.history = updatedHistory;
+
+    //  update user
+    this.db
+      .doc(`users/${this.userId}`)
+      .set(this.user.toJSON(), { merge: true });
+
     await this.onSaveToYourEvents();
   }
 
@@ -134,9 +161,13 @@ export class SelectedEventBookingFormComponent implements OnInit {
     this.event.status = EventStatusEnum.Booked;
 
     // create new records of the booking in yourEvent collection of user
-    const yourEvent = new UserEvent(this.event.toJSON(), USER_PERMISSION, this.numberOfTickets);
+    const yourEvent = new UserEvent(
+      this.event.toJSON(),
+      USER_PERMISSION,
+      this.numberOfTickets
+    );
 
-    console.log(this.event.toJSON())
+    console.log(this.event.toJSON());
     if (this.data.permission) {
       console.log('YOUR EVENT');
       this.bookingData.emit(yourEvent.toJSON());
@@ -158,7 +189,7 @@ export class SelectedEventBookingFormComponent implements OnInit {
     if (this.promotionCode === this.event.promotionCode) {
       this.wrongCode = false;
       this.promotionCodeInput = this.promotionCode;
-      this.updatedTotal = this.total - (this.total * this.event.discount / 100);
+      this.updatedTotal = this.total - (this.total * this.event.discount) / 100;
       this.total = this.updatedTotal;
     } else {
       this.wrongCode = true;

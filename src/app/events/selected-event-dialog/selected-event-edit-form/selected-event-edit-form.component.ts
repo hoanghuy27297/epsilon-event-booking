@@ -98,9 +98,14 @@ export class SelectedEventEditFormComponent implements OnInit {
     this.store
       .pipe(select(selectUserId))
       .subscribe(state => (this.userId = state));
-    this.store
-      .pipe(select(selectUser))
-      .subscribe(state => (this.user = new User(state)));
+
+    // get user
+    this.db
+      .doc(`users/${this.userId}`)
+      .valueChanges()
+      .subscribe(result => {
+        this.user = new User(result, this.userId);
+      });
   }
 
   ngOnInit() {
@@ -200,6 +205,18 @@ export class SelectedEventEditFormComponent implements OnInit {
       this.updatedEvent.emit(this.event);
     }
 
+    const historyTime = new DateTime().getDateWithFormat('HH:mm DD/MM/YYYY');
+    const newHistoryAction = `You have updated ${
+      this.event.name
+    } event at ${historyTime}`;
+    const updatedHistory = [newHistoryAction, ...this.user.history];
+    this.user.history = updatedHistory;
+
+    //  update user
+    this.db
+      .doc(`users/${this.userId}`)
+      .set(this.user.toJSON(), { merge: true });
+
     this.updatingEvent(this.event);
     this.updatingYourEvent(this.yourEvent);
     this.cancelUpdate.emit(true);
@@ -223,6 +240,18 @@ export class SelectedEventEditFormComponent implements OnInit {
   onDeleteEvent() {
     // delete the event in events collection
     this.db.doc(`events/${this.event.id}`).delete();
+
+    const historyTime = new DateTime().getDateWithFormat('HH:mm DD/MM/YYYY');
+    const newHistoryAction = `You have deleted ${
+      this.event.name
+    } event at ${historyTime}`;
+    const updatedHistory = [newHistoryAction, ...this.user.history];
+    this.user.history = updatedHistory;
+
+    //  update user
+    this.db
+      .doc(`users/${this.userId}`)
+      .set(this.user.toJSON(), { merge: true });
 
     // find all users
     this.db

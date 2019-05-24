@@ -11,7 +11,7 @@ export interface IUser extends IDateTracking {
   gender: number,
   position: number,
   role: number,
-  events: IUserEvent
+  history: Array<string>,
 }
 
 export class User extends DateTracking implements IUser {
@@ -22,9 +22,11 @@ export class User extends DateTracking implements IUser {
   gender = 0;
   position = 0;
   role = 0;
-  private _events = new UserEvent();
 
-  constructor(data?: IUser | any, private _id: string = null) {
+  private _history: Array<string> = [];
+  private _events: UserEvent;
+
+  constructor(data?: IUser | any, private _id: string = '') {
     super();
     this.fromJSON(data);
   }
@@ -49,6 +51,14 @@ export class User extends DateTracking implements IUser {
     this._events = new UserEvent(events);
   }
 
+  get history(): Array<string> {
+    return this._history;
+  }
+
+  set history(value: Array<string>) {
+    this._history = value;
+  }
+
   fromRawValue(data: any): User {
     const dataSource = this;
     this.email = data.email || dataSource.email || '';
@@ -58,6 +68,7 @@ export class User extends DateTracking implements IUser {
     this.gender = data.gender || dataSource.gender || 0;
     this.position = data.position || dataSource.position || 0;
     this.role = data.role || dataSource.role || 0;
+    this.history = data.history || dataSource.history || [];
 
     return this;
   }
@@ -74,12 +85,14 @@ export class User extends DateTracking implements IUser {
     this.gender = data.gender || dataSource.gender || 0;
     this.position = data.position || dataSource.position || 0;
     this.role = data.role || dataSource.role || 0;
+    this.history = data.history || dataSource.history || [];
 
     return this;
   }
 
   toJSON(): IUser {
     return {
+      id: this.id,
       email: this.email,
       firstName: this.firstName,
       lastName: this.lastName,
@@ -87,7 +100,7 @@ export class User extends DateTracking implements IUser {
       gender: this.gender,
       position: this.position,
       role: this.role,
-      events: this.events.toJSON(),
+      history: this.history,
       ...super.toJSON()
     }
   }

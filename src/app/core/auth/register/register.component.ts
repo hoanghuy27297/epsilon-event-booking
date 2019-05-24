@@ -127,12 +127,13 @@ export class RegisterComponent implements OnInit {
         .add(data.toJSON())
         .then(result => {
           this.store.dispatch(new ActionAuthLogin(result.id, data.toJSON()));
-          return data;
+          const user = new User(data.toJSON(), result.id);
+          this.db.doc(`users/${result.id}`).set(user.toJSON(), { merge: true });
         })
         .catch(error => {
           console.log(error);
           return error;
-        })
+        });
     }
   }
 

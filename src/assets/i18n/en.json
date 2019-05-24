@@ -106,7 +106,8 @@
   "epsilon.events.booking.ccv": "CCV",
   "epsilon.events.booking.tickets": "Number of tickets",
 
-  "epsilon.yourEvents": "Your Events"
+  "epsilon.yourEvents": "Your Events",
 
+  "epsilon.profile.history": "Activities History"
 
 }

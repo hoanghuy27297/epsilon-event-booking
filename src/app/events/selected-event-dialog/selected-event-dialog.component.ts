@@ -1,3 +1,4 @@
+import { User } from './../../shared/models/user.model';
 import { DateTime } from './../../shared/models/datetime.model';
 import { Event } from './../../shared/models/event.model';
 import { UserEvent } from './../../shared/models/user-event.model';
@@ -38,6 +39,7 @@ export class SelectedEventDialogComponent implements OnInit, OnDestroy {
   isEditing = false;
   isBooking = false;
   booked$: Observable<any>;
+  user: User = new User();
 
   constructor(
     private fb: FormBuilder,
@@ -95,6 +97,15 @@ export class SelectedEventDialogComponent implements OnInit, OnDestroy {
           return new EventStatus(this.data.status);
         })
       );
+
+    // get user
+    this.db
+      .doc(`users/${this.userId}`)
+      .valueChanges()
+      .subscribe(result => {
+        console.log(result);
+        this.user = new User(result, this.userId);
+      });
   }
 
   onCancel(): void {
@@ -160,14 +171,19 @@ export class SelectedEventDialogComponent implements OnInit, OnDestroy {
           );
 
           // check upcoming event or past event
-          if (isTimeAvailable < 0 && this.yourEvent.status !== EventStatusEnum.Past) {
+          if (
+            isTimeAvailable < 0 &&
+            this.yourEvent.status !== EventStatusEnum.Past
+          ) {
             this.yourEvent.status = EventStatusEnum.Past;
           } else if (isFull > 0) {
-            this.yourEvent.status = EventStatusEnum.Available
+            this.yourEvent.status = EventStatusEnum.Available;
           }
 
           // Update the event in Events collections
-          this.db.doc(`events/${this.yourEvent.id}`).set(this.yourEvent.toJSON(), { merge: true });
+          this.db
+            .doc(`events/${this.yourEvent.id}`)
+            .set(this.yourEvent.toJSON(), { merge: true });
 
           // delete record in yourEvent collection of the user
           this.db
@@ -175,14 +191,41 @@ export class SelectedEventDialogComponent implements OnInit, OnDestroy {
             .delete();
 
           this.booked$ = of(null);
-          this.notificationSvc.success('You have canceled the booking successfully!');
+          this.notificationSvc.success(
+            'You have canceled the booking successfully!'
+          );
         }
       });
+
+      const time = new DateTime().getDateWithFormat('HH:mm DD/MM/YYYY');
+      const newHistoryAction = `You have canceled ${
+        this.yourEvent.name
+      } event booking at ${time}`;
+      const updatedHistory = [newHistoryAction, ...this.user.history];
+      this.user.history = updatedHistory;
+
+      //  update user
+      this.db
+        .doc(`users/${this.userId}`)
+        .set(this.user.toJSON(), { merge: true });
   }
 
   async onSaveEvent() {
     try {
       this.yourEvent.status = EventStatusEnum.Saved;
+
+      const time = new DateTime().getDateWithFormat('HH:mm DD/MM/YYYY');
+      const newHistoryAction = `You have saved ${
+        this.yourEvent.name
+      } event at ${time}`;
+      const updatedHistory = [newHistoryAction, ...this.user.history];
+      this.user.history = updatedHistory;
+
+      //  update user
+      this.db
+        .doc(`users/${this.userId}`)
+        .set(this.user.toJSON(), { merge: true });
+
       await this.db
         .doc(`users/${this.userId}/yourEvents/${this.data.id}`)
         .set(this.yourEvent.toJSON());
@@ -195,6 +238,18 @@ export class SelectedEventDialogComponent implements OnInit, OnDestroy {
 
   async onUnsaveEvent() {
     try {
+      const time = new DateTime().getDateWithFormat('HH:mm DD/MM/YYYY');
+      const newHistoryAction = `You have unsaved ${
+        this.yourEvent.name
+      } event at ${time}`;
+      const updatedHistory = [newHistoryAction, ...this.user.history];
+      this.user.history = updatedHistory;
+
+      //  update user
+      this.db
+        .doc(`users/${this.userId}`)
+        .set(this.user.toJSON(), { merge: true });
+
       await this.db
         .doc(`users/${this.userId}/yourEvents/${this.data.id}`)
         .delete();

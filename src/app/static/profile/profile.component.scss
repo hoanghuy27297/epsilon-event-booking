@@ -10,3 +10,14 @@
     }
   }
 }
+
+.history-content {
+  font-size: 14px;
+  border-bottom: 1px solid #ddd;
+  padding: 5px;
+}
+
+.history-content-container {
+  overflow: auto;
+  max-height: 260px;
+}
