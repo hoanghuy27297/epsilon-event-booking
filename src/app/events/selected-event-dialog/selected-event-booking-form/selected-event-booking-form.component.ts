@@ -15,10 +15,15 @@ import { Store, select } from '@ngrx/store';
 import { debounceTime, map } from 'rxjs/operators';
 import { Utility } from '@app/shared/helpers/utilities';
 import { Observable } from 'rxjs';
+import { EventStatusEnum } from '@app/shared/models/status.model';
+import { UserEvent } from '@app/shared/models/user-event.model';
 
 type CardField = 'cardName' | 'cardNumber' | 'expire' | 'ccv';
 
 type FormErrors = { [cf in CardField]: any };
+
+const ADMIN_PERMISSION = 1;
+const USER_PERMISSION = 0;
 
 @Component({
   selector: 'epsilon-selected-event-booking-form',
@@ -33,7 +38,7 @@ export class SelectedEventBookingFormComponent implements OnInit {
     cardName: '',
     cardNumber: '',
     expire: '',
-    ccv: '',
+    ccv: ''
   };
   userId: string;
   private _total = 0;
@@ -42,7 +47,9 @@ export class SelectedEventBookingFormComponent implements OnInit {
   data: any = {};
   @Output()
   cancelBooking: EventEmitter<boolean> = new EventEmitter();
-  numberOfTickets = 0;
+  @Output()
+  bookingData: EventEmitter<any> = new EventEmitter();
+  numberOfTickets = 1;
 
   constructor(
     private fb: FormBuilder,
@@ -90,5 +97,41 @@ export class SelectedEventBookingFormComponent implements OnInit {
 
   onCancelBooking() {
     this.cancelBooking.emit(true);
+  }
+
+  async onCheckout() {
+    this.event.amount = this.event.amount + this.numberOfTickets;
+    const numberOfTicketsLeft = this.event.capacity - this.event.amount;
+    if (numberOfTicketsLeft <= 0) {
+      this.event.status = EventStatusEnum.Full;
+    }
+
+    this.notificationSvc.success('You have made a booking successfully');
+
+    this.db
+      .doc(`events/${this.event.id}`)
+      .set(this.event.toJSON(), { merge: true });
+
+    await this.onSaveToYourEvents();
+  }
+
+  onSaveToYourEvents() {
+    this.event.status = EventStatusEnum.Booked;
+
+    // create new records of the booking in yourEvent collection of user
+    const yourEvent = new UserEvent(this.event.toJSON(), USER_PERMISSION, this.numberOfTickets);
+
+    console.log(this.event.toJSON())
+    if (this.data.permission) {
+      console.log('YOUR EVENT');
+      this.bookingData.emit(yourEvent.toJSON());
+    } else {
+      this.bookingData.emit(this.event.toJSON());
+    }
+    this.cancelBooking.emit(true);
+
+    this.db
+      .doc(`users/${this.userId}/yourEvents/${this.event.id}`)
+      .set(yourEvent.toJSON());
   }
 }

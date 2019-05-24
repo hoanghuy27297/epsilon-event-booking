@@ -33,11 +33,11 @@ export class Event extends DateTracking implements IEvent {
   time = '';
   price = 0;
   capacity = 0;
-  amount = 0;
   discount = 0;
   promotionCode = [];
   description = '';
 
+  private _amount = 0;
   private _date = '';
   private _eventTime: DateTime = new DateTime(new Date());
   private _admins = [];
@@ -129,6 +129,14 @@ export class Event extends DateTracking implements IEvent {
 
   set date(date: string) {
     this._date = date;
+  }
+
+  get amount(): number {
+    return this._amount;
+  }
+
+  set amount(value: number) {
+    this._amount = value;
   }
 
   toJSON(): IEvent {

@@ -1,3 +1,4 @@
+import { DateTime } from './../../shared/models/datetime.model';
 import { Event } from './../../shared/models/event.model';
 import { UserEvent } from './../../shared/models/user-event.model';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
@@ -18,7 +19,7 @@ import {
 import { Store, select } from '@ngrx/store';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { takeUntil, map, filter } from 'rxjs/operators';
-import { Subject, Observable } from 'rxjs';
+import { Subject, Observable, of } from 'rxjs';
 import { EventStatus, EventStatusEnum } from '@app/shared/models/status.model';
 
 @Component({
@@ -36,6 +37,7 @@ export class SelectedEventDialogComponent implements OnInit, OnDestroy {
   yourEvent: any;
   isEditing = false;
   isBooking = false;
+  booked$: Observable<any>;
 
   constructor(
     private fb: FormBuilder,
@@ -54,31 +56,45 @@ export class SelectedEventDialogComponent implements OnInit, OnDestroy {
     console.log(this.data);
     this.yourEvent = new Event(this.data, this.data.id);
     if (this.data.permission) {
-      this.yourEvent = new UserEvent(this.yourEvent.toJSON(), this.data.permission);
+      this.yourEvent = new UserEvent(
+        this.yourEvent.toJSON(),
+        this.data.permission
+      );
     }
     this.onCheckYourEvents();
   }
 
   onCheckYourEvents() {
+    // check admin permission to edit event
     this.permission$ = this.db
       .doc(`users/${this.userId}/yourEvents/${this.data.id}`)
       .valueChanges()
-      .pipe(takeUntil(this._unsubscribeAll), map((result: UserEvent) => {
-        if (result && result.permission === 1) {
-          return result.permission
-        };
+      .pipe(
+        takeUntil(this._unsubscribeAll),
+        map((result: UserEvent) => {
+          if (result && result.permission === 1) {
+            return result.permission;
+          }
           return 0;
-      }));
+        })
+      );
+
+    // check saved and booked status for normal user
     this.status$ = this.db
       .doc(`users/${this.userId}/yourEvents/${this.data.id}`)
       .valueChanges()
-      .pipe(takeUntil(this._unsubscribeAll), map((result: UserEvent) => {
-        console.log(result);
-        if (result) {
-          return new EventStatus(result.status);
-        }
-        return new EventStatus(this.data.status);
-      }));
+      .pipe(
+        takeUntil(this._unsubscribeAll),
+        map((result: UserEvent) => {
+          if (result) {
+            if (result.status === EventStatusEnum.Booked) {
+              this.booked$ = of(EventStatusEnum.Booked);
+            }
+            return new EventStatus(result.status);
+          }
+          return new EventStatus(this.data.status);
+        })
+      );
   }
 
   onCancel(): void {
@@ -108,14 +124,67 @@ export class SelectedEventDialogComponent implements OnInit, OnDestroy {
   onFinishEditEvent(updatedEvent: any) {
     this.yourEvent = new Event(updatedEvent, updatedEvent.id);
     if (updatedEvent.permission) {
-      this.yourEvent = new UserEvent(this.yourEvent.toJSON(), updatedEvent.permission);
+      this.yourEvent = new UserEvent(
+        this.yourEvent.toJSON(),
+        updatedEvent.permission
+      );
     }
+  }
+
+  onFinishBookingEvent(bookedEvent: any) {
+    this.yourEvent = new Event(bookedEvent, bookedEvent.id);
+    if (bookedEvent.permission) {
+      this.yourEvent = new UserEvent(
+        this.yourEvent.toJSON(),
+        bookedEvent.permission
+      );
+    }
+  }
+
+  onCancelReservation() {
+    let numberOfTickets = 0;
+    this.yourEvent = new Event(this.yourEvent, this.yourEvent.id);
+    this.db
+      .doc(`users/${this.userId}/yourEvents/${this.yourEvent.id}`)
+      .valueChanges()
+      .subscribe((result: UserEvent) => {
+        if (result && result.id) {
+          // reduce the amount of the this.yourEvent in Events collection
+          numberOfTickets = result.tickets;
+          this.yourEvent.amount = this.yourEvent.amount - numberOfTickets;
+          const isFull = this.yourEvent.capacity - this.yourEvent.amount;
+
+          const isTimeAvailable = new DateTime().compareWithCurrent(
+            this.yourEvent.date,
+            this.yourEvent.time
+          );
+
+          // check upcoming event or past event
+          if (isTimeAvailable < 0 && this.yourEvent.status !== EventStatusEnum.Past) {
+            this.yourEvent.status = EventStatusEnum.Past;
+          } else if (isFull > 0) {
+            this.yourEvent.status = EventStatusEnum.Available
+          }
+
+          // Update the event in Events collections
+          this.db.doc(`events/${this.yourEvent.id}`).set(this.yourEvent.toJSON(), { merge: true });
+
+          // delete record in yourEvent collection of the user
+          this.db
+            .doc(`users/${this.userId}/yourEvents/${this.yourEvent.id}`)
+            .delete();
+
+          this.booked$ = of(null);
+          this.notificationSvc.success('You have canceled the booking successfully!');
+        }
+      });
   }
 
   async onSaveEvent() {
     try {
       this.yourEvent.status = EventStatusEnum.Saved;
-      await this.db.doc(`users/${this.userId}/yourEvents/${this.data.id}`)
+      await this.db
+        .doc(`users/${this.userId}/yourEvents/${this.data.id}`)
         .set(this.yourEvent.toJSON());
       this.notificationSvc.success('You have saved event successfully!');
     } catch (error) {
@@ -126,7 +195,9 @@ export class SelectedEventDialogComponent implements OnInit, OnDestroy {
 
   async onUnsaveEvent() {
     try {
-      await this.db.doc(`users/${this.userId}/yourEvents/${this.data.id}`).delete();
+      await this.db
+        .doc(`users/${this.userId}/yourEvents/${this.data.id}`)
+        .delete();
       this.notificationSvc.success('You have unsaved event successfully!');
     } catch (error) {
       this.notificationSvc.error('Unsaved event failed. Please try again');

@@ -1,6 +1,6 @@
 <div *ngIf="!isBooking; else onBookingEvent">
   <div *ngIf="!isEditing; else onEditingEvent">
-    <div *ngIf="!(permission$ | async)">
+    <div *ngIf="!(permission$ | async) && !(booked$ | async)">
       <button *ngIf="status$ | async as status; else notSaved"
         type="button" mat-button
         [ngClass]="status.code === 4 ? 'saved-button' : 'save-button'"
@@ -55,7 +55,12 @@
       <button type="button" mat-raised-button color="warn" (click)="onCancel()">Cancel</button>
       <button type="button" *ngIf="permission$ | async as permission; else notAdmin" [disabled]="yourEvent.status === 2" mat-raised-button color="primary" (click)="onEditEvent()">Edit</button>
       <ng-template #notAdmin>
-        <button type="button" [disabled]="yourEvent.status === 1 || yourEvent.status === 2" mat-raised-button color="accent" (click)="onBookEvent()">Book</button>
+        <div *ngIf="booked$ | async; else bookAction">
+          <button type="button" mat-raised-button color="primary" (click)="onCancelReservation()">Cancel Event</button>
+        </div>
+        <ng-template #bookAction>
+          <button type="button" [disabled]="yourEvent.status === 1 || yourEvent.status === 2" mat-raised-button color="accent" (click)="onBookEvent()">Book</button>
+        </ng-template>
       </ng-template>
     </div>
   </div>
@@ -66,5 +71,5 @@
 </div>
 
 <ng-template #onBookingEvent>
-  <epsilon-selected-event-booking-form [data]="yourEvent.toJSON()" (cancelBooking)="onCancelBooking($event)"></epsilon-selected-event-booking-form>
+  <epsilon-selected-event-booking-form [data]="yourEvent.toJSON()" (cancelBooking)="onCancelBooking($event)" (bookingData)="onFinishBookingEvent($event)"></epsilon-selected-event-booking-form>
 </ng-template>
