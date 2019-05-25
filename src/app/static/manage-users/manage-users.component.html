@@ -1,7 +1,10 @@
 <div class="search-wrapper" *ngIf="user$ | async as user">
-  <mat-form-field style="width: 100%" [ngClass]="routeAnimationsElements">
+  <mat-form-field class="col-md-10" [ngClass]="routeAnimationsElements">
     <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search an user">
   </mat-form-field>
+  <button type="button" class="col-md-2" mat-raised-button color="accent" [ngClass]="routeAnimationsElements" (click)="onManageUser('add')">
+    {{ 'epsilon.manageUser.addNew' | translate }}
+  </button>
 </div>
 
 <mat-table mat-table [dataSource]="dataSource" class="table" matSort [ngClass]="routeAnimationsElements">
@@ -30,8 +33,32 @@
     <td mat-cell class="row-element" *matCellDef="let row" [style.color]="row.color"> {{row.role === 0 ? 'User' : row.role === 1 ? 'Admin' : 'Super Admin'}} </td>
   </ng-container>
 
+  <!-- Buttons Column -->
+  <ng-container matColumnDef="buttons">
+    <th mat-header-cell class="row-element" *matHeaderCellDef mat-sort-header> Actions </th>
+    <td mat-cell class="row-element" *matCellDef="let row" [style.color]="row.color">
+      <div class="d-flex row justify-content-center">
+        <!-- EDIT BUTTON -->
+        <div class="delete-button" style="background-color: #03a9f4; margin-right: 10px" (click)="onManageUser('edit', row)">
+          <fa-icon icon="pencil-alt" [matTooltip]="'Edit'"
+            matTooltipPosition="right" class="delete-button_icon">
+          </fa-icon>
+        </div>
+        <!-- / EDIT BUTTON -->
+
+        <!-- DELETE BUTTON -->
+        <div class="delete-button" (click)="onManageUser('delete', row)">
+          <fa-icon icon="trash-alt" [matTooltip]="'Delete'"
+            matTooltipPosition="left" class="delete-button_icon">
+          </fa-icon>
+        </div>
+        <!-- / DELETE BUTTON -->
+      </div>
+    </td>
+  </ng-container>
+
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row class="row" *matRowDef="let row; columns: displayedColumns;" (click)="onSelectUser(row)"></tr>
+  <tr mat-row class="row" *matRowDef="let row; columns: displayedColumns;"></tr>
 </mat-table>
 
 <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>

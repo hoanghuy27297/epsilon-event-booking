@@ -1,0 +1,164 @@
+<h1 mat-dialog-title>{{ data.type === 'add' ? 'Add New User' : data.type === 'edit' ? 'Edit User' : '' }}</h1>
+<div [ngSwitch]="data.type">
+
+  <!-- ADD NEW USER -->
+  <div *ngSwitchCase="'add'">
+
+      <form [formGroup]="formGroup">
+          <div class="d-flex row justify-content-between">
+            <mat-form-field class="col-md-6" [ngClass]="routeAnimationsElements">
+              <input matInput formControlName="firstName" placeholder="{{ 'epsilon.register.firstName' | translate }}" required>
+              <mat-error *ngIf="formErrors.firstName">
+                {{ formErrors.firstName }}
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field class="col-md-6" [ngClass]="routeAnimationsElements">
+              <input matInput formControlName="lastName" placeholder="{{ 'epsilon.register.lastName' | translate }}" required>
+              <mat-error *ngIf="formErrors.lastName">
+                {{ formErrors.lastName }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="row">
+            <mat-form-field class="col-md-6" [ngClass]="routeAnimationsElements">
+              <input matInput formControlName="email" placeholder="{{ 'epsilon.register.email' | translate }}" required>
+              <mat-error *ngIf="formErrors.email">
+                {{ formErrors.email }}
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field class="col-md-6" [ngClass]="routeAnimationsElements">
+                <mat-select formControlName="gender" placeholder="{{ 'epsilon.register.gender' | translate }}" required>
+                    <mat-option *ngFor="let gender of genderList" [value]="gender.code">
+                        {{ gender.name }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="formErrors.gender">{{ formErrors.gender }}</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="row">
+            <mat-form-field class="col-md-6" [ngClass]="routeAnimationsElements">
+                <mat-select formControlName="position" placeholder="{{ 'epsilon.register.position' | translate }}">
+                    <mat-option *ngFor="let position of positionList" [value]="position.code">
+                        {{ position.name }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="formErrors.position">{{ formErrors.position }}</mat-error>
+            </mat-form-field>
+            <mat-form-field class="col-md-6" [ngClass]="routeAnimationsElements">
+              <input matInput formControlName="userId" autocomplete="off" placeholder="{{(this.studentId$ | async) ? 'Student ID' : 'Staff ID' }}">
+              <mat-error *ngIf="formErrors.userId">
+                {{ formErrors.userId }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <mat-form-field style="width: 100%;" [ngClass]="routeAnimationsElements">
+              <mat-select formControlName="role" placeholder="{{ 'epsilon.register.role' | translate }}" required>
+                  <mat-option *ngFor="let role of roleList" [value]="role.code">
+                      {{ role.name }}
+                  </mat-option>
+              </mat-select>
+              <mat-error *ngIf="formErrors.role">{{ formErrors.role }}</mat-error>
+          </mat-form-field>
+          <div class="d-flex row justify-content-between">
+            <mat-form-field class="col-md-6" [ngClass]="routeAnimationsElements">
+              <input matInput type="password" formControlName="password" placeholder="{{ 'epsilon.register.password' | translate }}" required>
+              <mat-error *ngIf="formErrors.password">
+                {{ formErrors.password }}
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field class="col-md-6" [ngClass]="routeAnimationsElements">
+              <input matInput type="password" formControlName="confirmPassword" placeholder="{{ 'epsilon.register.confirmPassword' | translate }}" required>
+              <mat-error *ngIf="formErrors.confirmPassword">
+                {{ formErrors.confirmPassword }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </form>
+
+    <div class="d-flex row justify-content-between" style="margin: 10px 0;">
+      <button type="button" mat-raised-button color="warn" (click)="onNoClick()">Cancel</button>
+      <button type="button" mat-raised-button color="accent">Ok</button>
+    </div>
+  </div>
+  <!-- / ADD NEW USER -->
+
+  <!-- EDIT USER -->
+  <div *ngSwitchCase="'edit'">
+
+      <form [formGroup]="formGroup">
+        <div class="d-flex row justify-content-between">
+          <mat-form-field class="col-md-6" [ngClass]="routeAnimationsElements">
+            <input matInput formControlName="firstName" placeholder="{{ 'epsilon.register.firstName' | translate }}" required>
+            <mat-error *ngIf="formErrors.firstName">
+              {{ formErrors.firstName }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="col-md-6" [ngClass]="routeAnimationsElements">
+            <input matInput formControlName="lastName" placeholder="{{ 'epsilon.register.lastName' | translate }}" required>
+            <mat-error *ngIf="formErrors.lastName">
+              {{ formErrors.lastName }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <mat-form-field class="col-md-6" [ngClass]="routeAnimationsElements">
+            <input matInput formControlName="email" placeholder="{{ 'epsilon.register.email' | translate }}" required>
+            <mat-error *ngIf="formErrors.email">
+              {{ formErrors.email }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="col-md-6" [ngClass]="routeAnimationsElements">
+              <mat-select formControlName="gender" placeholder="{{ 'epsilon.register.gender' | translate }}" required>
+                  <mat-option *ngFor="let gender of genderList" [value]="gender.code">
+                      {{ gender.name }}
+                  </mat-option>
+              </mat-select>
+              <mat-error *ngIf="formErrors.gender">{{ formErrors.gender }}</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <mat-form-field class="col-md-6" [ngClass]="routeAnimationsElements">
+              <mat-select formControlName="position" placeholder="{{ 'epsilon.register.position' | translate }}">
+                  <mat-option *ngFor="let position of positionList" [value]="position.code">
+                      {{ position.name }}
+                  </mat-option>
+              </mat-select>
+              <mat-error *ngIf="formErrors.position">{{ formErrors.position }}</mat-error>
+          </mat-form-field>
+          <mat-form-field class="col-md-6" [ngClass]="routeAnimationsElements">
+            <input matInput formControlName="userId" autocomplete="off" placeholder="{{(this.studentId$ | async) ? 'Student ID' : 'Staff ID' }}">
+            <mat-error *ngIf="formErrors.userId">
+              {{ formErrors.userId }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <mat-form-field style="width: 100%;" [ngClass]="routeAnimationsElements">
+            <mat-select formControlName="role" placeholder="{{ 'epsilon.register.role' | translate }}" required>
+                <mat-option *ngFor="let role of roleList" [value]="role.code">
+                    {{ role.name }}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="formErrors.role">{{ formErrors.role }}</mat-error>
+        </mat-form-field>
+      </form>
+
+    <div class="d-flex row justify-content-between" style="margin: 10px 0;">
+      <button type="button" mat-raised-button color="warn" (click)="onNoClick()">Cancel</button>
+      <button type="button" mat-raised-button color="accent">Ok</button>
+    </div>
+  </div>
+  <!-- / EDIT USER -->
+
+  <!-- DELETE USER -->
+  <div *ngSwitchCase="'delete'">
+    <div>
+      Do you want to delete user <span style="color: red">{{ data.data.firstName }} {{ data.data.lastName }}</span> whose email is <span style="color: red">{{data.data.email}}</span>
+    </div>
+    <div class="d-flex row justify-content-between" style="margin: 10px">
+      <button type="button" mat-raised-button color="warn" (click)="onNoClick()">Cancel</button>
+      <button type="button" mat-raised-button color="primary">Delete</button>
+    </div>
+  </div>
+  <!-- / DELETE USER -->
+
+</div>

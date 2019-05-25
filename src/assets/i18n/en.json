@@ -82,6 +82,7 @@
   "epsilon.register.studentId": "Student ID",
   "epsilon.register.staffId": "Staff ID",
   "epsilon.register.gender": "Gender",
+  "epsilon.register.role": "Role",
   "epsilon.register.position": "Position",
 
   "epsilon.events": "Events",
@@ -109,6 +110,8 @@
 
   "epsilon.yourEvents": "Your Events",
 
-  "epsilon.profile.history": "Activities History"
+  "epsilon.profile.history": "Activities History",
+
+  "epsilon.manageUser.addNew": "Add new user"
 
 }

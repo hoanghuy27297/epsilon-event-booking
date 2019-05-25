@@ -3,7 +3,7 @@ import { UserEvent, IUserEvent } from './user-event.model';
 import { IDateTracking, DateTracking } from './date-tracking.model';
 
 export interface UsersState {
-  users: User[],
+  users: IUser[],
 }
 
 export interface IUser extends IDateTracking {

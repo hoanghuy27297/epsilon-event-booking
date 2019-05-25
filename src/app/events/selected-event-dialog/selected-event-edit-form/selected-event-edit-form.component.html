@@ -96,11 +96,11 @@
 <div *ngIf="!onDeleting; else deleteEvent" class="d-flex justify-content-between action full-width">
   <button type="button" mat-raised-button color="warn" (click)="onCancelUpdate($event.value)">Cancel</button>
   <div class="d-flex column align-items-center">
-    <button mat-button class="delete-button" (click)="onDeleteClick()">
+    <div class="delete-button" (click)="onDeleteClick()">
       <fa-icon icon="trash-alt" [matTooltip]="'Delete'"
         matTooltipPosition="left" class="delete-button_icon">
       </fa-icon>
-    </button>
+    </div>
     <button type="button" mat-raised-button color="accent" (click)="onUpdateEvent($event.value)">Update</button>
   </div>
 </div>

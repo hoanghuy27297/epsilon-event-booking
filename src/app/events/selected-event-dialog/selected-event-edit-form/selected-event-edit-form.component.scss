@@ -27,22 +27,37 @@
   }
 }
 
+// .delete-button {
+//   font-size: 20px;
+//   color: #fff;
+//   margin-right: 12px;
+//   min-width: 45px;
+//   background-color: #d81b60;
+//   padding: 0;
+//   height: 36px;
+//   display: flex;
+//   justify-content: center;
+//   &.mat-button-wrapper {
+//     height: 36px;
+//     display: flex;
+//     align-items: center;
+//   }
+//   .delete-button_icon {
+//     margin-top: -3px;
+//   }
+// }
+
 .delete-button {
-  font-size: 20px;
   color: #fff;
+  font-size: 18px;
   margin-right: 12px;
-  min-width: 45px;
   background-color: #d81b60;
   padding: 0;
   height: 36px;
+  width: 36px;
   display: flex;
   justify-content: center;
-  &.mat-button-wrapper {
-    height: 36px;
-    display: flex;
-    align-items: center;
-  }
-  .delete-button_icon {
-    margin-top: -3px;
-  }
+  align-items: center;
+  border-radius: 5px;
+  cursor: pointer;
 }

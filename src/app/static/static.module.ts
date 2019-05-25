@@ -10,6 +10,7 @@ import { ChangePasswordDialogComponent } from './profile/change-password-dialog/
 import { ManageUsersComponent } from './manage-users/manage-users.component';
 import { StoreModule } from '@ngrx/store';
 import { FEATURE_EVENT, reducers } from './manage-users/manage-user.state';
+import { ManageUserDialogComponent } from './manage-users/manage-user-dialog/manage-user-dialog.component';
 
 @NgModule({
   imports: [
@@ -22,8 +23,9 @@ import { FEATURE_EVENT, reducers } from './manage-users/manage-user.state';
     FeaturesComponent,
     ProfileComponent,
     ChangePasswordDialogComponent,
-    ManageUsersComponent
+    ManageUsersComponent,
+    ManageUserDialogComponent
   ],
-  entryComponents: [ChangePasswordDialogComponent]
+  entryComponents: [ChangePasswordDialogComponent, ManageUserDialogComponent]
 })
 export class StaticModule {}

@@ -16,10 +16,10 @@
 .row {
     width: 100%;
     display: table-row;
-    cursor: pointer;
-    &:hover {
-      background-color: rgba(226, 226, 226, 0.384);
-    }
+    // cursor: pointer;
+    // &:hover {
+    //   background-color: rgba(226, 226, 226, 0.384);
+    // }
 }
 
 .search-wrapper {
@@ -71,4 +71,21 @@ td {
       background-color: #d5d829;
       // color: #6c757d;
   }
+}
+
+.delete-button {
+  color: #fff;
+  background-color: #d81b60;
+  padding: 0;
+  height: 30px;
+  width: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.row-element {
+  width: unset;
 }
