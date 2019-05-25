@@ -1,9 +1,24 @@
 import { User } from '@app/shared/models/user.model';
-import { Component, OnInit, ChangeDetectionStrategy, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  Inject
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormControl
+} from '@angular/forms';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { NotificationService, AppState, ROUTE_ANIMATIONS_ELEMENTS, selectUserId } from '@app/core';
+import {
+  NotificationService,
+  AppState,
+  ROUTE_ANIMATIONS_ELEMENTS,
+  selectUserId
+} from '@app/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Store, select } from '@ngrx/store';
 import { UserRules } from '@app/shared/validators/validators';
@@ -50,6 +65,8 @@ export class ManageUserDialogComponent implements OnInit {
   };
   userId: string;
   user: User = new User();
+  currentUser: User = new User();
+  admin: User = new User();
 
   genderList = new GenderList().listGender;
   positionList = new PositionList().listPosition;
@@ -74,7 +91,7 @@ export class ManageUserDialogComponent implements OnInit {
       .doc(`users/${this.userId}`)
       .valueChanges()
       .subscribe(result => {
-        this.user = new User(result, this.userId);
+        this.admin = new User(result, this.userId);
       });
 
     console.log(data);
@@ -82,7 +99,7 @@ export class ManageUserDialogComponent implements OnInit {
 
   ngOnInit() {
     this.user = new User(this.data.data, this.data.data.id);
-
+    this.currentUser = new User(this.user, this.user.id);
     this.buildForm();
   }
 
@@ -100,7 +117,10 @@ export class ManageUserDialogComponent implements OnInit {
     this.formGroup = this.fb.group({
       firstName: [this.user.firstName, [Validators.required]],
       lastName: [this.user.lastName, [Validators.required]],
-      email: [{ value: this.user.email, disabled: this.data.type === 'edit' }, [Validators.required, Validators.email]],
+      email: [
+        { value: this.user.email, disabled: this.data.type === 'edit' },
+        [Validators.required, Validators.email]
+      ],
       userId: [
         this.user.userId,
         [Validators.required, Validators.pattern(UserRules.numberOnly)]
@@ -123,15 +143,83 @@ export class ManageUserDialogComponent implements OnInit {
   }
 
   onCreateAccount() {
+    this.user = this.user.fromRawValue(this.formGroup.getRawValue());
+    const password = this.formGroup.get('password').value;
+    this.afAuth.auth
+      .createUserWithEmailAndPassword(this.user.email, password)
+      .then(result => {
+        if (result.additionalUserInfo.isNewUser) {
+          this.createNewUser(this.user);
+        }
+      })
+      .catch(error => {
+        console.log(error);
+        this.notificationSvc.error(
+          'Creating account failed. Please try again!'
+        );
+      });
+  }
 
+  createNewUser(data: User): Promise<User> {
+    if (data.email) {
+      return this.db
+        .collection('users')
+        .add(data.toJSON())
+        .then(result => {
+          const user = new User(data.toJSON(), result.id);
+          this.db.doc(`users/${result.id}`).set(user.toJSON(), { merge: true });
+        })
+        .then(() => {
+          this.dialogRef.close();
+          this.notificationSvc.success(
+            `You have created an account for ${
+              this.user.fullName
+            } successfully!`
+          );
+        })
+        .catch(error => {
+          console.log(error);
+          return error;
+        });
+    }
+  }
+
+  onEditAccount() {
+    this.user = this.user.fromRawValue(this.formGroup.getRawValue());
+
+    this.db
+      .doc(`users/${this.user.id}`)
+      .set(this.user.toJSON(), { merge: true });
+    this.notificationSvc.success(
+      `You have updated user ${this.user.fullName} successfully!`
+    );
+
+    // if role is updated, yourEvent collection of this user will be deleted
+    if (this.currentUser.role !== this.user.role) {
+      this.db
+        .collection(`users/${this.user.id}/yourEvents`)
+        .snapshotChanges()
+        .subscribe(data => {
+          data.forEach(result => {
+            this.db
+              .doc(`users/${this.user.id}/yourEvents/${result.payload.doc.id}`)
+              .delete();
+          });
+        });
+    }
   }
 
   onDeleteAccount() {
     this.db.doc(`users/${this.user.id}`).delete();
+    this.notificationSvc.success(
+      `You have delete an account of ${
+        this.user.fullName
+      } successfully!`
+    );
+    this.dialogRef.close();
   }
 
   onNoClick(): void {
     this.dialogRef.close();
   }
-
 }

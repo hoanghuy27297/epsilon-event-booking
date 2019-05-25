@@ -1,6 +1,6 @@
 <div *ngIf="!isBooking; else onBookingEvent">
   <div *ngIf="!isEditing; else onEditingEvent">
-    <div *ngIf="!(permission$ | async) && !(booked$ | async)">
+    <div *ngIf="!(permission$ | async) && !(booked$ | async) && !(isAdmin$ | async)">
       <button *ngIf="status$ | async as status; else notSaved"
         type="button" mat-button
         [ngClass]="status.code === 4 ? 'saved-button' : 'save-button'"
@@ -53,7 +53,7 @@
     </div>
     <div class="d-flex justify-content-between action full-width">
       <button type="button" mat-raised-button color="warn" (click)="onCancel()">Cancel</button>
-      <button type="button" *ngIf="permission$ | async as permission; else notAdmin" [disabled]="yourEvent.status === 2" mat-raised-button color="primary" (click)="onEditEvent()">Edit</button>
+      <button type="button" *ngIf="((permission$ | async) || (isAdmin$ | async)); else notAdmin" [disabled]="yourEvent.status === 2" mat-raised-button color="primary" (click)="onEditEvent()">Edit</button>
       <ng-template #notAdmin>
         <div *ngIf="booked$ | async; else bookAction">
           <button type="button" mat-raised-button color="primary" (click)="onCancelReservation()">Cancel Event</button>

@@ -37,7 +37,7 @@
   <ng-container matColumnDef="buttons">
     <th mat-header-cell class="row-element" *matHeaderCellDef mat-sort-header> Actions </th>
     <td mat-cell class="row-element" *matCellDef="let row" [style.color]="row.color">
-      <div class="d-flex row justify-content-center">
+      <div *ngIf="row.id !== userId" class="d-flex row justify-content-center">
         <!-- EDIT BUTTON -->
         <div class="delete-button" style="background-color: #03a9f4; margin-right: 10px" (click)="onManageUser('edit', row)">
           <fa-icon icon="pencil-alt" [matTooltip]="'Edit'"

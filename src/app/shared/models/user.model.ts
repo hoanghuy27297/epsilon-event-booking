@@ -69,9 +69,9 @@ export class User extends DateTracking implements IUser {
     this.firstName = data.firstName || dataSource.firstName || '';
     this.lastName = data.lastName || dataSource.lastName || '';
     this.userId = data.userId || dataSource.userId || null;
-    this.gender = data.gender || dataSource.gender || 0;
-    this.position = data.position || dataSource.position || 0;
-    this.role = data.role || dataSource.role || 0;
+    this.gender = data.gender || 0;
+    this.position = data.position || 0;
+    this.role = data.role || 0;
     this.history = data.history || dataSource.history || [];
 
     return this;
@@ -86,9 +86,9 @@ export class User extends DateTracking implements IUser {
     this.firstName = data.firstName || dataSource.firstName || '';
     this.lastName = data.lastName || dataSource.lastName || '';
     this.userId = data.userId || dataSource.userId || null;
-    this.gender = data.gender || dataSource.gender || 0;
-    this.position = data.position || dataSource.position || 0;
-    this.role = data.role || dataSource.role || 0;
+    this.gender = data.gender || 0;
+    this.position = data.position || 0;
+    this.role = data.role || 0;
     this.history = data.history || dataSource.history || [];
 
     return this;

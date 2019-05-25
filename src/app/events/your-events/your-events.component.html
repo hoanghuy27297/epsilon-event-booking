@@ -1,10 +1,10 @@
 <div class="search-wrapper" *ngIf="user$ | async as user">
-  <mat-form-field style="width: 100%" [ngClass]="routeAnimationsElements">
+  <mat-form-field style="width: 100%">
     <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search an event">
   </mat-form-field>
 </div>
 
-<mat-table mat-table [dataSource]="dataSource" class="table" matSort [ngClass]="routeAnimationsElements">
+<mat-table mat-table [dataSource]="dataSource" class="table" matSort>
 
   <!-- Name Column -->
   <ng-container matColumnDef="name">

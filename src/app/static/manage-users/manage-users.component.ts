@@ -8,7 +8,7 @@ import {
   ViewChild,
   OnDestroy
 } from '@angular/core';
-import { ROUTE_ANIMATIONS_ELEMENTS, selectUser } from '@app/core';
+import { ROUTE_ANIMATIONS_ELEMENTS, selectUser, selectUserId } from '@app/core';
 import { Store, select } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
 import { User, IUser } from '@app/shared/models/user.model';
@@ -39,6 +39,7 @@ export class ManageUsersComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['name', 'email', 'position', 'role', 'buttons'];
   userList$: Observable<any>;
   private _unsubscribeAll: Subject<any> = new Subject();
+  userId: string = '';
 
   constructor(
     private store: Store<AppState>,
@@ -49,6 +50,11 @@ export class ManageUsersComponent implements OnInit, OnDestroy {
       select(selectUser),
       map(user => user)
     );
+
+    this.store
+      .pipe(select(selectUserId))
+      .subscribe(state => (this.userId = state));
+
     this.userList$ = this.store.pipe(select(selectUserList));
   }
 

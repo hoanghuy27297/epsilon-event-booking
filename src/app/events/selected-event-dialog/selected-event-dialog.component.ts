@@ -15,7 +15,8 @@ import {
   NotificationService,
   AppState,
   ROUTE_ANIMATIONS_ELEMENTS,
-  selectUserId
+  selectUserId,
+  selectUser
 } from '@app/core';
 import { Store, select } from '@ngrx/store';
 import { AngularFirestore } from '@angular/fire/firestore';
@@ -40,6 +41,8 @@ export class SelectedEventDialogComponent implements OnInit, OnDestroy {
   isBooking = false;
   booked$: Observable<any>;
   user: User = new User();
+  role$: Observable<number>;
+  isAdmin$: Observable<boolean>;
 
   constructor(
     private fb: FormBuilder,
@@ -52,6 +55,14 @@ export class SelectedEventDialogComponent implements OnInit, OnDestroy {
     this.store
       .pipe(select(selectUserId))
       .subscribe(state => (this.userId = state));
+
+    this.store.pipe(select(selectUser)).subscribe(state => {
+      this.user = state;
+      if (state !== 1) {
+        this.isAdmin$ = of(true);
+      }
+    });
+
   }
 
   ngOnInit() {
@@ -102,8 +113,7 @@ export class SelectedEventDialogComponent implements OnInit, OnDestroy {
     this.db
       .doc(`users/${this.userId}`)
       .valueChanges()
-      .subscribe(result => {
-        console.log(result);
+      .subscribe((result: User) => {
         this.user = new User(result, this.userId);
       });
   }
@@ -197,17 +207,17 @@ export class SelectedEventDialogComponent implements OnInit, OnDestroy {
         }
       });
 
-      const time = new DateTime().getDateWithFormat('HH:mm DD/MM/YYYY');
-      const newHistoryAction = `You have canceled ${
-        this.yourEvent.name
-      } event booking at ${time}`;
-      const updatedHistory = [newHistoryAction, ...this.user.history];
-      this.user.history = updatedHistory;
+    const time = new DateTime().getDateWithFormat('HH:mm DD/MM/YYYY');
+    const newHistoryAction = `You have canceled ${
+      this.yourEvent.name
+    } event booking at ${time}`;
+    const updatedHistory = [newHistoryAction, ...this.user.history];
+    this.user.history = updatedHistory;
 
-      //  update user
-      this.db
-        .doc(`users/${this.userId}`)
-        .set(this.user.toJSON(), { merge: true });
+    //  update user
+    this.db
+      .doc(`users/${this.userId}`)
+      .set(this.user.toJSON(), { merge: true });
   }
 
   async onSaveEvent() {

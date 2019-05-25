@@ -67,10 +67,8 @@ export class LoginComponent implements OnInit {
       .signInAndRetrieveDataWithEmailAndPassword(email, password)
       .then(result => {
         if (result.user.uid) {
-          this.notificationSvc.success('Welcome back!');
           console.log(result);
           this.getUserDocId(email);
-          this.navigationSvc.toAbout();
         }
       })
       .catch(error => this.handleError(error));
@@ -116,8 +114,11 @@ export class LoginComponent implements OnInit {
       .subscribe(data => {
         data.map(item => {
           const user = new User(item.payload.doc.data());
-          if (user.email === email)
+          if (user.email === email) {
+            this.notificationSvc.success('Welcome back!');
+            this.navigationSvc.toAbout();
             this.store.dispatch(new ActionAuthLogin(item.payload.doc.id, user.toJSON()));
+          }
         });
       });
   }
