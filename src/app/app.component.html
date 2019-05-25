@@ -43,10 +43,18 @@
                   </button>
                 </div>
                 <ng-template #adminNavigations>
-                  <button mat-button class="nav-button" *ngFor="let item of adminNavigation" [routerLink]="[item.link]"
-                  routerLinkActive="active">
-                  {{item.label | translate}}
-                  </button>
+                  <div *ngIf="user.role === 2; else notSuperAdmin">
+                    <button mat-button class="nav-button" *ngFor="let item of superAdminNavigation" [routerLink]="[item.link]"
+                    routerLinkActive="active">
+                    {{item.label | translate}}
+                    </button>
+                  </div>
+                  <ng-template #notSuperAdmin>
+                    <button mat-button class="nav-button" *ngFor="let item of adminNavigation" [routerLink]="[item.link]"
+                    routerLinkActive="active">
+                    {{item.label | translate}}
+                    </button>
+                  </ng-template>
                 </ng-template>
               </div>
             </div>

@@ -1,0 +1,38 @@
+<div class="search-wrapper" *ngIf="user$ | async as user">
+  <mat-form-field style="width: 100%" [ngClass]="routeAnimationsElements">
+    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search an user">
+  </mat-form-field>
+</div>
+
+<mat-table mat-table [dataSource]="dataSource" class="table" matSort [ngClass]="routeAnimationsElements">
+
+  <!-- Name Column -->
+  <ng-container matColumnDef="name">
+    <th mat-header-cell class="row-element row-element_name" *matHeaderCellDef mat-sort-header> Name </th>
+    <td mat-cell class="row-element row-element_name" *matCellDef="let row"> {{row.firstName}} {{row.lastName}} </td>
+  </ng-container>
+
+  <!-- Email Column -->
+  <ng-container matColumnDef="email">
+    <th mat-header-cell class="row-element" *matHeaderCellDef mat-sort-header> Email </th>
+    <td mat-cell class="row-element" *matCellDef="let row"> {{row.email}} </td>
+  </ng-container>
+
+  <!-- Position Column -->
+  <ng-container matColumnDef="position">
+    <th mat-header-cell class="row-element" *matHeaderCellDef mat-sort-header> Position </th>
+    <td mat-cell class="row-element" *matCellDef="let row"> {{row.position === 0 ? 'Student' : 'Staff'}} </td>
+  </ng-container>
+
+  <!-- Role Column -->
+  <ng-container matColumnDef="role">
+    <th mat-header-cell class="row-element" *matHeaderCellDef mat-sort-header> Role </th>
+    <td mat-cell class="row-element" *matCellDef="let row" [style.color]="row.color"> {{row.role === 0 ? 'User' : row.role === 1 ? 'Admin' : 'Super Admin'}} </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row class="row" *matRowDef="let row; columns: displayedColumns;" (click)="onSelectUser(row)"></tr>
+</mat-table>
+
+<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+

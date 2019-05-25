@@ -2,6 +2,10 @@ import { IEvent } from './event.model';
 import { UserEvent, IUserEvent } from './user-event.model';
 import { IDateTracking, DateTracking } from './date-tracking.model';
 
+export interface UsersState {
+  users: User[],
+}
+
 export interface IUser extends IDateTracking {
   id?: string,
   email: string,

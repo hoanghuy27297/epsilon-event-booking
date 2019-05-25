@@ -1,6 +1,6 @@
 <div class="search-wrapper" *ngIf="user$ | async as user">
   <mat-form-field style="width: 100%" [ngClass]="routeAnimationsElements">
-    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search a event">
+    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search an event">
   </mat-form-field>
 </div>
 

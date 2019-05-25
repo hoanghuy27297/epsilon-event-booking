@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { AboutComponent } from './about/about.component';
 import { FeaturesComponent } from './features/features.component';
+import { ManageUsersComponent } from './manage-users/manage-users.component';
 
 const routes: Routes = [
   {
@@ -19,7 +20,12 @@ const routes: Routes = [
   {
     path: 'profile',
     component: ProfileComponent,
-    data: { title: 'epsition.menu.yourProfile' }
+    data: { title: 'epsilon.menu.yourProfile' }
+  },
+  {
+    path: 'manage-user',
+    component: ManageUsersComponent,
+    data: { title: 'epsilon.menu.manageUser' }
   }
 ];
 

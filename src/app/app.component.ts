@@ -44,7 +44,12 @@ export class AppComponent implements OnInit {
   adminNavigation = [
     { link: 'about', label: 'epsilon.menu.about' },
     { link: 'events', label: 'epsilon.events' },
-  ]
+  ];
+  superAdminNavigation = [
+    { link: 'about', label: 'epsilon.menu.about' },
+    { link: 'events', label: 'epsilon.events' },
+    { link: 'manage-user', label: 'epsilon.menu.manageUser' },
+  ];
   navigationSideMenu = [
     ...this.navigation,
     { link: 'settings', label: 'epsilon.menu.settings' }
