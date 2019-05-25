@@ -58,7 +58,7 @@ export class SelectedEventDialogComponent implements OnInit, OnDestroy {
 
     this.store.pipe(select(selectUser)).subscribe(state => {
       this.user = state;
-      if (state !== 1) {
+      if (state.role !== 0) {
         this.isAdmin$ = of(true);
       }
     });
