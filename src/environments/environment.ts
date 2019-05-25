@@ -8,7 +8,7 @@ const packageJson = require('../../package.json');
 export const environment = {
   appName: 'Epsilon Event Booking',
   envName: 'DEV',
-  production: false,
+  production: true,
   test: false,
   i18nPrefix: '',
   versions: {

@@ -1,8 +1,8 @@
 <div class="search-wrapper" *ngIf="user$ | async as user">
-  <mat-form-field [style.width]="user.role === 0 ? '100%' : '80%'" [style.margin-right]="user.role === 0 ? '0' : '15px'">
+  <mat-form-field style="width: 100%" [ngClass]="user.role !== 0 && 'col-md-10'">
     <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search an event">
   </mat-form-field>
-  <button [class]="user.role === 0 && 'add-new_none'" type="button" mat-raised-button color="accent" (click)="onOpenAddNewEventDialog()">
+  <button type="button" *ngIf="user.role !== 0" class="col-md-2" mat-raised-button color="accent" (click)="onOpenAddNewEventDialog()">
     {{ 'epsilon.events.addNew' | translate }}
   </button>
 </div>
