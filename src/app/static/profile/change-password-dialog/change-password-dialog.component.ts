@@ -1,8 +1,10 @@
+import { User } from '@app/shared/models/user.model';
+import { DateTime } from '@app/shared/models/datetime.model';
 import { NotificationService } from '@app/core/notifications/notification.service';
 import { Utility } from './../../../shared/helpers/utilities';
 import { UserRules } from './../../../shared/validators/validators';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { ROUTE_ANIMATIONS_ELEMENTS } from '@app/core';
+import { ROUTE_ANIMATIONS_ELEMENTS, AppState, selectUserId } from '@app/core';
 import * as firebase from 'firebase';
 import {
   Component,
@@ -19,6 +21,8 @@ import {
 } from '@angular/forms';
 import { CustomValidators } from 'ng2-validation';
 import { debounceTime } from 'rxjs/operators';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { select, Store } from '@ngrx/store';
 
 type ChangePasswordFields = 'password' | 'confirmPassword';
 
@@ -37,14 +41,30 @@ export class ChangePasswordDialogComponent implements OnInit {
     password: '',
     confirmPassword: ''
   };
+  userId: string;
+  user: User = new User();
 
   constructor(
     private fb: FormBuilder,
     private afAuth: AngularFireAuth,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private notificationSvc: NotificationService,
-    public dialogRef: MatDialogRef<ChangePasswordDialogComponent>
-  ) {}
+    public dialogRef: MatDialogRef<ChangePasswordDialogComponent>,
+    private db: AngularFirestore,
+    private store: Store<AppState>
+  ) {
+    this.store
+      .pipe(select(selectUserId))
+      .subscribe(state => (this.userId = state));
+
+    // get user
+    this.db
+      .doc(`users/${this.userId}`)
+      .valueChanges()
+      .subscribe(result => {
+        this.user = new User(result, this.userId);
+      });
+  }
 
   ngOnInit() {
     this.buildForm();
@@ -79,11 +99,21 @@ export class ChangePasswordDialogComponent implements OnInit {
     const password = this.formGroup.get('password').value;
     const user = this.afAuth.auth.currentUser;
 
+    const time = new DateTime().getDateWithFormat('HH:mm DD/MM/YYYY');
+    const newHistoryAction = `You have changed your password at ${time}`;
+    const updatedHistory = [newHistoryAction, ...this.user.history];
+    this.user.history = updatedHistory;
+
+
     user
-      .updatePassword(password)
-      .then(() => {
-        this.notificationSvc.success('You have updated your password successfully!');
-        this.dialogRef.close();
+    .updatePassword(password)
+    .then(() => {
+      //  update user
+      this.db
+        .doc(`users/${this.userId}`)
+        .set(this.user.toJSON(), { merge: true });
+      this.notificationSvc.success('You have updated your password successfully!');
+      this.dialogRef.close();
       })
       .catch(error => this.handleError(error));
   }

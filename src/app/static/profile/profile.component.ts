@@ -1,3 +1,4 @@
+import { DateTime } from '@app/shared/models/datetime.model';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {
   FormControl,
@@ -125,6 +126,12 @@ export class ProfileComponent implements OnInit {
 
   updateUserDetail() {
     this.user = this.user.fromRawValue(this.formGroup.getRawValue());
+
+    const time = new DateTime().getDateWithFormat('HH:mm DD/MM/YYYY');
+    const newHistoryAction = `You have updated your profile at ${time}`;
+    const updatedHistory = [newHistoryAction, ...this.user.history];
+    this.user.history = updatedHistory;
+
     this.db
       .doc(`users/${this.userId}`)
       .set(this.user.toJSON(), { merge: true })
